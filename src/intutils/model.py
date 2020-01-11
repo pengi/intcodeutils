@@ -6,7 +6,7 @@ class IntElfSection:
     def __init__(self):
         self.data = []
         self.symbols = {}
-        self.is_relocatable = True
+        self.origin = None
 
 class IntElfFile:
     def __init__(self):

@@ -3,25 +3,29 @@ from intutils import output_intelf, parse_intelf, IntElfError
 import sys
 from io import StringIO
 
+prefix = 'tests/fixtures/intelf/'
+
 # Elffiles holding the same structure, so content can be asserted upon
 simple_elffiles = [
-    'tests/fixtures/intelf/simple_plain.intelf',
-    'tests/fixtures/intelf/simple_unknown_vars.intelf'
+    prefix+'simple_plain.intelf',
+    prefix+'simple_unknown_vars.intelf'
 ]
 
 # Elffiles holding the output format (with exception of possible linebreaks at end)
 plain_elffiles = [
-    'tests/fixtures/intelf/simple_plain.intelf'
+    prefix+'simple_plain.intelf',
+    prefix+'non_relocatable.intelf'
 ]
 
 err_elffiles = [
-    ('tests/fixtures/intelf/err_no_sym_argument.intelf', IntElfError),
-    ('tests/fixtures/intelf/err_invalid_line.intelf', IntElfError),
-    ('tests/fixtures/intelf/err_duplicate_sections.intelf', IntElfError),
-    ('tests/fixtures/intelf/err_duplicate_symbols.intelf', IntElfError),
-    ('tests/fixtures/intelf/err_symbol_without_section.intelf', IntElfError),
-    ('tests/fixtures/intelf/err_malformed_var_plus_plus.intelf', IntElfError),
-    ('tests/fixtures/intelf/err_malformed_empty.intelf', IntElfError),
+    (prefix+'err_no_sym_argument.intelf', IntElfError),
+    (prefix+'err_invalid_line.intelf', IntElfError),
+    (prefix+'err_duplicate_sections.intelf', IntElfError),
+    (prefix+'err_duplicate_symbols.intelf', IntElfError),
+    (prefix+'err_symbol_without_section.intelf', IntElfError),
+    (prefix+'err_malformed_var_plus_plus.intelf', IntElfError),
+    (prefix+'err_malformed_empty.intelf', IntElfError),
+    (prefix+'err_duplicate_origin.intelf', IntElfError),
 ]
 
 @pytest.mark.parametrize("filename", simple_elffiles)
@@ -56,6 +60,18 @@ def test_output_intelf(filename):
         outp = StringIO()
         output_intelf(elf, file=outp)
         assert outp.getvalue().rstrip() == expect.rstrip()
+
+def test_non_relocatable():
+    with open(prefix+'non_relocatable.intelf', 'r') as f:
+        elf = parse_intelf(f)
+        
+        assert elf.sections.get('.text')
+        text = elf.sections['.text']
+        assert text.origin == 0
+        
+        assert elf.sections.get('.data')
+        text = elf.sections['.data']
+        assert text.origin == 1000
 
 @pytest.mark.parametrize("intelf_file,exception", err_elffiles)
 def test_error_intasm(intelf_file,exception):

@@ -66,8 +66,11 @@ def parse_intelf(f):
             if section is None:
                 raise IntElfError("Argument without section")
             if name == '_':
-                # Section parameter, ignore all for now
-                pass
+                # Section parameter. Only "origin" is supported, ignore others
+                if arg == "origin":
+                    if section.origin is not None:
+                        raise IntElfError("Duplicate origin")
+                    section.origin = int(val, 10)
             else:
                 # Currently only "offset" is supported, ignore others
                 if arg == "offset":
@@ -92,6 +95,8 @@ def output_intelf(elf, file=sys.stdout):
             else:
                 format_data.append("%s%+d" % (ref, value))
         print("%s: %s" % (name, ",".join(format_data)), file=file)
+        if section.origin is not None:
+            print("_.origin: %d" % (section.origin,), file=file)
         for name, symbol in section.symbols.items():
             print("%s.offset: %d" % (name, symbol.offset), file=file)
         print(file=file)
