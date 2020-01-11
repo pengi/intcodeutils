@@ -1,6 +1,5 @@
 import pytest
 from intutils import output_intelf, parse_intelf, IntElfError
-import sys
 from io import StringIO
 
 prefix = 'tests/fixtures/intelf/'

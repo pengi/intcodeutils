@@ -1,7 +1,6 @@
 import pytest
 from intutils import output_intelf
 from intutils import parse_intasm, IntAsmError
-import sys
 from io import StringIO
 
 
