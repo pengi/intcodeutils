@@ -1,0 +1,6 @@
+@section .text
+
+main:
+    exit
+
+@origin 100

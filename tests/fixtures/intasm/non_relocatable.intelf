@@ -1,0 +1,7 @@
+.text: 99
+_.origin: 0
+main.offset: 0
+
+.data: 99
+_.origin: 1000
+var.offset: 0

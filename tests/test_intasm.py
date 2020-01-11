@@ -10,16 +10,20 @@ matching_intasm = [
     'tests/fixtures/intasm/no_refs.intasm',
     'tests/fixtures/intasm/with_refs.intasm',
     'tests/fixtures/intasm/multi_section.intasm',
+    'tests/fixtures/intasm/non_relocatable.intasm',
 ]
 
 error_intasm = [
     ('tests/fixtures/intasm/err_code_without_section.intasm', IntAsmError),
+    ('tests/fixtures/intasm/err_duplicate_origin.intasm', IntAsmError),
     ('tests/fixtures/intasm/err_invalid_arguments.intasm', IntAsmError),
     ('tests/fixtures/intasm/err_invalid_instruction.intasm', IntAsmError),
     ('tests/fixtures/intasm/err_invalid_line.intasm', IntAsmError),
     ('tests/fixtures/intasm/err_invalid_meta.intasm', IntAsmError),
     ('tests/fixtures/intasm/err_invalid_section.intasm', IntAsmError),
     ('tests/fixtures/intasm/err_multi_section.intasm', IntAsmError),
+    ('tests/fixtures/intasm/err_origin_after_instructions.intasm', IntAsmError),
+    ('tests/fixtures/intasm/err_origin_after_labels.intasm', IntAsmError),
     ('tests/fixtures/intasm/err_symbol_without_section.intasm', IntAsmError),
 ]
 

@@ -137,6 +137,14 @@ def parse_intasm(file):
                     raise IntAsmError("Duplicate section \"" + value + "\"")
                 section = IntElfSection()
                 elf.sections[value] = section
+            elif tag == 'origin':
+                if section is None:
+                    raise IntAsmError("No section specified")
+                if section.origin is not None:
+                    raise IntAsmError("Duplicate origin for section")
+                if section.data != [] or section.symbols != {}:
+                    raise IntAsmError("origin can only be specified before code")
+                section.origin = _str_to_int(value)
             else:
                 raise IntAsmError("Unknown meta-line: "+line)
         elif linetype == 'symbol':

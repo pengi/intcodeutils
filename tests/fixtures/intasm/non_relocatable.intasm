@@ -1,0 +1,11 @@
+@section .text
+@origin 0
+
+main:
+    exit
+
+@section .data
+@origin 1000
+
+var:
+    exit
