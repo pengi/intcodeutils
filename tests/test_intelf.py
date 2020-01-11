@@ -1,17 +1,17 @@
 import pytest
-from inttool.fileio import parse_intelf, output_intelf
+from intutils import output_intelf, parse_intelf
 import sys
 from io import StringIO
 
 # Elffiles holding the same structure, so content can be asserted upon
 simple_elffiles = [
-    'tests/fixtures/simple_plain.intelf',
-    'tests/fixtures/simple_unknown_vars.intelf'
+    'tests/fixtures/intelf/simple_plain.intelf',
+    'tests/fixtures/intelf/simple_unknown_vars.intelf'
 ]
 
 # Elffiles holding the output format (with exception of possible linebreaks at end)
 plain_elffiles = [
-    'tests/fixtures/simple_plain.intelf'
+    'tests/fixtures/intelf/simple_plain.intelf'
 ]
 
 @pytest.mark.parametrize("filename", simple_elffiles)

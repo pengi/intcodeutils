@@ -1,0 +1,10 @@
+@section .text
+
+-- comment
+
+main:
+    add [%sp-2],2,[3]
+    mul 1,[2],[3]
+somethinginthemiddle:
+    clt [%sp+2],-1,[3]
+    exit
