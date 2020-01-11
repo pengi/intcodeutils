@@ -1,16 +1,23 @@
 import argparse
-from intutils import parse_intasm 
+from intutils import parse_intasm
+from intutils import output_intelf
+import sys
 
 parser = argparse.ArgumentParser(description='IntCode assembly')
 
 parser.add_argument(
-    'files',
+    'file',
     metavar='FILE',
     type=argparse.FileType('r'),
-    nargs='+',
     help='Intcode assembly files')
+
+parser.add_argument(
+    '-o', '--out',
+    metavar='FILE',
+    type=argparse.FileType('w'),
+    default=sys.stdout,
+    help='Output file. Default stdout')
 
 def main():
     args = parser.parse_args()
-    for f in args.files:
-        print(parse_intasm(f).__dict__)
+    output_intelf(parse_intasm(args.file), file=args.out)
