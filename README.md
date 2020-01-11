@@ -13,6 +13,28 @@ Author of intutils is not affiliated with Advent of Code
 
 More information about Advent of Code is available their [homepage](https://adventofcode.com)
 
+Installation
+------------
+Recommended method of testing is using pip, in an virtualenv
+
+Run in a shell:
+```
+$ virtualenv venv
+$ . venv/bin/activate
+$ pip install git+https://github.com/pengi/intutils.git
+```
+
+Commands available are:
+```
+$ intcode-asm
+$ intcode-ld
+$ intcode-objcopy
+```
+
+Since intutils is under development, it is not recommended to install outside a virtualenv.
+
+More information about virtualenv is available on their [homepage](https://virtualenv.pypa.io)
+
 intcode
 -------
 A big part of the Advent of Code 2019 puzzles was the intcode computer. The intcode computer enabled the possibility to hide puzzle logic from the user, but at the same time can be executed on the users computer.
