@@ -1,9 +1,9 @@
 @section .section.a
     add [2],[3],[4]
 sym_a:
-    jnz [6],[7]
+    jt [6],[7]
 
 @section .section.b
     add [2],[3],[4]
 sym_b:
-    jnz [6],[7]
+    jt [6],[7]

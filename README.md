@@ -94,12 +94,12 @@ The syntax used for intcode-asm is as follows:
 @section .section.a
     add [2],[3],[4]
 sym_a:
-    jnz [6],[7]
+    jt [6],[7]
 
 @section .section.b
     add [2],[3],[4]
 sym_b:
-    jnz [6],[7]
+    jt [6],[7]
 ```
 
 There are three kinds of lines:
@@ -114,8 +114,8 @@ Available instructions are:
 * `mul a,b,c` - Multiply `a` and `b`, store at `c`
 * `in a` - Input a value, store at `a`
 * `out a` - Output value `a`
-* `jnz a,b` - Jump to `b` if `a` is not zero
-* `jn a,b` - Jump to `b` if `a` is zero
+* `jt a,b` - Jump to `b` if `a` is not zero (is true)
+* `jf a,b` - Jump to `b` if `a` is zero (is false)
 * `clt a,b,c` - Compare `a` and `b`, store `1` in `c` if `a<b`, store `0` otherwise
 * `ceq a,b,c` - Compare `a` and `b`, store `1` in `c` if `a=b`, store `0` otherwise
 * `sp a` - Increases stack pointer with `a`
@@ -123,7 +123,7 @@ Available instructions are:
 
 Values can be written in 5 formats:
 
-Format                          | Example         | Description            
+Format                          | Example         | Description
 --------------------------------|-----------------|-------------
 Immediate                       | `32`, `-12`     | Contant value
 Symbol relative                 | `var`, `var+12` | Contant address
