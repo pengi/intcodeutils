@@ -1,0 +1,4 @@
+@section .text
+main:
+-- too many arguments
+    jnz 1,2,3

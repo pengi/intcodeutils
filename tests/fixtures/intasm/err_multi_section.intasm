@@ -1,0 +1,8 @@
+@section .text
+func_a:
+    exit
+
+-- error: same section name
+@section .text
+func_b:
+    exit

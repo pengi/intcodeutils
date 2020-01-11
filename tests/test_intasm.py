@@ -1,19 +1,30 @@
 import pytest
 from intutils import output_intelf
-from intutils import parse_intasm
+from intutils import parse_intasm, IntAsmError
 import sys
 from io import StringIO
 
 
 # Elffiles holding the same structure, so content can be asserted upon
-matching_intelf = [
+matching_intasm = [
     'tests/fixtures/intasm/no_refs.intasm',
     'tests/fixtures/intasm/with_refs.intasm',
     'tests/fixtures/intasm/multi_section.intasm',
 ]
 
-@pytest.mark.parametrize("intasm_file", matching_intelf)
-def test_parse_intelf(intasm_file):
+error_intasm = [
+    ('tests/fixtures/intasm/err_code_without_section.intasm', IntAsmError),
+    ('tests/fixtures/intasm/err_invalid_arguments.intasm', IntAsmError),
+    ('tests/fixtures/intasm/err_invalid_instruction.intasm', IntAsmError),
+    ('tests/fixtures/intasm/err_invalid_line.intasm', IntAsmError),
+    ('tests/fixtures/intasm/err_invalid_meta.intasm', IntAsmError),
+    ('tests/fixtures/intasm/err_invalid_section.intasm', IntAsmError),
+    ('tests/fixtures/intasm/err_multi_section.intasm', IntAsmError),
+    ('tests/fixtures/intasm/err_symbol_without_section.intasm', IntAsmError),
+]
+
+@pytest.mark.parametrize("intasm_file", matching_intasm)
+def test_parse_intasm(intasm_file):
     intelf_file = intasm_file[:-7] + ".intelf"
     print("Running test:", intelf_file, intasm_file)
     expect = "invalid expect"
@@ -29,3 +40,9 @@ def test_parse_intelf(intasm_file):
         actual = outp.getvalue().rstrip()
 
     assert actual == expect
+
+@pytest.mark.parametrize("intasm_file,exception", error_intasm)
+def test_error_intasm(intasm_file,exception):
+    with pytest.raises(exception):
+        with open(intasm_file, 'r') as intasm:
+            parse_intasm(intasm)

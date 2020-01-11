@@ -46,6 +46,9 @@ _arg_mode_mem = 0
 _arg_mode_immediate = 1
 _arg_mode_sp_rel = 2
 
+class IntAsmError(Exception):
+    pass
+
 def _str_to_int(in_str):
     """
     Convert an integer in string format, or empty string, to an integer.
@@ -98,14 +101,16 @@ def _parse_line(line):
                 if match:
                     args.append((_arg_mode_sp_rel, (None, _str_to_int(match.group(1)))))
                     continue
-                raise Exception("Unknown argument")
+                raise IntAsmError("Unknown argument")
         return ('instruction', (mnemonic, args))
-    raise Exception("Unknown line")
+    raise IntAsmError("Unknown line")
 
 def _instruction_to_ints(mnemonic, args):
-    (opcode, arg_count) = _instructions[mnemonic]
+    (opcode, arg_count) = _instructions.get(mnemonic, (None, 0))
+    if opcode is None:
+        raise IntAsmError("Invalid instruction")
     if len(args) != arg_count:
-        raise Exception("Invalid argument count")
+        raise IntAsmError("Invalid argument count")
     ints = [None]
     modifier_factor = 100
     for (arg_mode, value) in args:
@@ -127,18 +132,24 @@ def parse_intasm(file):
             tag, value = args
             if tag == 'section':
                 if not _re_section.match(value):
-                    raise Exception("Invalid section \"" + value +"\"")
+                    raise IntAsmError("Invalid section \"" + value + "\"")
+                if elf.sections.get(value):
+                    raise IntAsmError("Duplicate section \"" + value + "\"")
                 section = IntElfSection()
                 elf.sections[value] = section
             else:
-                raise Exception("Unknown meta-line: "+line)
+                raise IntAsmError("Unknown meta-line: "+line)
         elif linetype == 'symbol':
             name = args
+            if section is None:
+                raise IntAsmError("No section specified")
             section.symbols[name] = IntElfSymbol(len(section.data))
         elif linetype == 'instruction':
+            if section is None:
+                raise IntAsmError("No section specified")
             instruction = _instruction_to_ints(*args)
             section.data += instruction
         else:
-            raise Exception("Invalid line: "+line)
+            raise IntAsmError("Invalid line: "+line)
 
     return elf
