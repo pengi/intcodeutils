@@ -3,9 +3,10 @@ import re
 import sys
 
 _pat_sym='[a-z_][a-z_0-9]*'
+_pat_section='(?:\\.'+_pat_sym+')+'
 
-_pat_section = re.compile('^[\\s]*(\\.[a-z0-9\\.-_]+):[\\s]*(.*[^\\s])[\\s]*$')
-_pat_arg = re.compile('^[\\s]*('+_pat_sym+')\\.([a-z0-9]+):[\\s]*(.*[^\\s])[\\s]*$')
+_pat_line_section = re.compile('^[\\s]*('+_pat_section+'):[\\s]*(.*[^\\s])[\\s]*$')
+_pat_line_arg = re.compile('^[\\s]*('+_pat_sym+')\\.([a-z0-9]+):[\\s]*(.*[^\\s])[\\s]*$')
 
 _pat_val_rel = re.compile('^[\\s]*('+_pat_sym+')[\\s]*([+-][\\s]*[0-9]+|)[\\s]*$')
 _pat_val_abs = re.compile('^[\\s]*([+-]?[\\s]*[0-9]+)[\\s]*$')
@@ -42,12 +43,12 @@ def parse_intelf(f):
     elf = IntElfFile()
     section = None
     for line in f:
-        match = _pat_section.match(line)
+        match = _pat_line_section.match(line)
         if match:
             name, content = match.groups()
             section = _parse_section(content)
             elf.sections[name] = section
-        match = _pat_arg.match(line)
+        match = _pat_line_arg.match(line)
         if match:
             name, arg, val = match.groups()
             if name == '_':

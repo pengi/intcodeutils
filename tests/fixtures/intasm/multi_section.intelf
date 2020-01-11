@@ -1,5 +1,5 @@
-.section_a: 1,2,3,4,5,6,7
+.section.a: 1,2,3,4,5,6,7
 sym_a.offset: 4
 
-.section_b: 1,2,3,4,5,6,7
+.section.b: 1,2,3,4,5,6,7
 sym_b.offset: 4

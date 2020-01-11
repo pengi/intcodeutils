@@ -13,4 +13,4 @@ parser.add_argument(
 def main():
     args = parser.parse_args()
     for f in args.files:
-        print(parse_intasm(f))
+        print(parse_intasm(f).__dict__)
