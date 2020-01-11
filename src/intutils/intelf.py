@@ -5,7 +5,7 @@ import sys
 _pat_sym='[a-z_][a-z_0-9]*'
 _pat_section='(?:\\.'+_pat_sym+')+'
 
-_pat_line_section = re.compile('^('+_pat_section+'):[\\s]*(.*)$')
+_pat_line_section = re.compile('^('+_pat_section+'):(.*)$')
 _pat_line_arg = re.compile('^('+_pat_sym+')\\.('+_pat_sym+'):[\\s]*(.*)$')
 
 _pat_val_rel = re.compile('^('+_pat_sym+')([+-][0-9]+|)$')
@@ -15,30 +15,33 @@ class IntElfError(Exception):
     pass
 
 def _parse_section(data):
-    args = data.split(",")
     section = IntElfSection()
-    for arg in args:
-        found = False
-        match = _pat_val_rel.match(arg)
-        if match:
-            found = True
-            rel, value = match.groups()
-            if value == '':
-                value = 0
-            else:
-                value = int(value, 10)
-            
-            section.data.append((rel,value))
+    data = data.strip()
+    if data != '':
+        args = data.split(",")
+        for arg in args:
+            found = False
 
-        match = _pat_val_abs.match(arg)
-        if match:
-            found = True
-            value = int(match.group(1), 10)
-            
-            section.data.append((None,value))
-            
-        if not found:
-            raise IntElfError("Malformed value: " + arg)
+            match = _pat_val_rel.match(arg)
+            if match:
+                found = True
+                rel, value = match.groups()
+                if value == '':
+                    value = 0
+                else:
+                    value = int(value, 10)
+                
+                section.data.append((rel,value))
+
+            match = _pat_val_abs.match(arg)
+            if match:
+                found = True
+                value = int(match.group(1), 10)
+                
+                section.data.append((None,value))
+                
+            if not found:
+                raise IntElfError("Malformed value: " + arg)
     return section
 
 def parse_intelf(f):

@@ -14,7 +14,8 @@ simple_elffiles = [
 # Elffiles holding the output format (with exception of possible linebreaks at end)
 plain_elffiles = [
     prefix+'simple_plain.intelf',
-    prefix+'non_relocatable.intelf'
+    prefix+'non_relocatable.intelf',
+    prefix+'empty_section.intelf'
 ]
 
 err_elffiles = [
