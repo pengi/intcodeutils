@@ -118,8 +118,8 @@ Available instructions are:
 | `out a`     | Output value `a`                                                    |
 | `jt a,b`    | Jump to `b` if `a` is not zero (is true)                            |
 | `jf a,b`    | Jump to `b` if `a` is zero (is false)                               |
-| `clt a,b,c` | Compare `a` and `b`, store `1` in `c` if `a<b`, store `0` otherwise |
-| `ceq a,b,c` | Compare `a` and `b`, store `1` in `c` if `a=b`, store `0` otherwise |
+| `lt a,b,c`  | Compare `a` and `b`, store `1` in `c` if `a<b`, store `0` otherwise |
+| `eq a,b,c`  | Compare `a` and `b`, store `1` in `c` if `a=b`, store `0` otherwise |
 | `addsp a`   | Increases stack pointer with `a`                                    |
 | `halt`      | Halt the intcode computer                                           |
 
