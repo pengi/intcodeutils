@@ -13,14 +13,18 @@ import re
 # 9 = update SP
 # 99 = exit
 
+_sym_match='[a-z_][a-z_0-9]*'
+
 _pat_line_comment = re.compile('^--.*$')
 _pat_line_meta = re.compile('^@([a-z]+)[\\s]+([^\\s].*)$')
 _pat_line_symbol = re.compile('^([^\\s]+):$')
-_pat_line_instruction = re.compile('^([a-z]+)(?:[\\s]+([^\\s]*)|)$')
+_pat_line_instruction = re.compile('^('+_sym_match+')(?:[\\s]+([^\\s]*)|)$')
 
-_pat_arg_raw = re.compile('^((?:-|)[0-9]+)$')
-_pat_arg_abs = re.compile('^\\[([0-9]+)\\]$')
-_pat_arg_rel = re.compile('^\\[%sp([+-][0-9]+)\\]$')
+_pat_arg_imm = re.compile('^((?:[-+]|)[0-9]+)$')
+_pat_arg_mem = re.compile('^\\[([0-9]+)\\]$')
+_pat_arg_sym_imm = re.compile('^('+_sym_match+')(|[-+]?[0-9]+)$')
+_pat_arg_sym_mem = re.compile('^\\[('+_sym_match+')(|[+-][0-9]+)\\]$')
+_pat_arg_sp_mem = re.compile('^\\[%sp([+-][0-9]+)\\]$')
 
 _instructions = {
     'add': (1, 3),
@@ -34,6 +38,20 @@ _instructions = {
     'sp': (9, 1),
     'exit': (99, 0)
 }
+
+_arg_mode_mem = 0
+_arg_mode_immediate = 1
+_arg_mode_sp_rel = 2
+
+def _str_to_int(in_str):
+    """
+    Convert an integer in string format, or empty string, to an integer.
+
+    Simple helper for int(v, 10), which handles empty strings
+    """
+    if in_str == '':
+        return 0
+    return int(in_str, 10)
 
 def _parse_line(line):
     line = line.strip()
@@ -57,17 +75,25 @@ def _parse_line(line):
         if args_str:
             for argstr in args_str.split(","):
                 argstr = argstr.strip()
-                match = _pat_arg_raw.match(argstr)
+                match = _pat_arg_imm.match(argstr)
                 if match:
-                    args.append(('imm', int(match.group(1), 10)))
+                    args.append((_arg_mode_immediate, (None, _str_to_int(match.group(1)))))
                     continue
-                match = _pat_arg_abs.match(argstr)
+                match = _pat_arg_mem.match(argstr)
                 if match:
-                    args.append(('abs', int(match.group(1), 10)))
+                    args.append((_arg_mode_mem, (None, _str_to_int(match.group(1)))))
                     continue
-                match = _pat_arg_rel.match(argstr)
+                match = _pat_arg_sym_imm.match(argstr)
                 if match:
-                    args.append(('rel', int(match.group(1), 10)))
+                    args.append((_arg_mode_immediate, (match.group(1), _str_to_int(match.group(2)))))
+                    continue
+                match = _pat_arg_sym_mem.match(argstr)
+                if match:
+                    args.append((_arg_mode_mem, (match.group(1), _str_to_int(match.group(2)))))
+                    continue
+                match = _pat_arg_sp_mem.match(argstr)
+                if match:
+                    args.append((_arg_mode_sp_rel, (None, _str_to_int(match.group(1)))))
                     continue
                 raise Exception("Unknown argument")
         return ('instruction', (mnemonic, args))
@@ -79,22 +105,14 @@ def _instruction_to_ints(mnemonic, args):
         raise Exception("Invalid argument count")
     ints = [None]
     modifier_factor = 100
-    for (argtype, value) in args:
-        ints.append((None, value))
-        if argtype == 'abs':
-            opcode += modifier_factor * 0
-        if argtype == 'imm':
-            opcode += modifier_factor * 1
-        if argtype == 'rel':
-            opcode += modifier_factor * 2
+    for (arg_mode, value) in args:
+        ints.append(value)
+        opcode += modifier_factor * arg_mode
         modifier_factor *= 10
     ints[0] = (None, opcode)
     return ints
 
 def parse_intasm(file):
-    symbols = {}
-    sections = {}
-
     section = None
     elf = IntElfFile()
 
@@ -113,8 +131,10 @@ def parse_intasm(file):
             name = args
             section.symbols[name] = IntElfSymbol(len(section.data))
         elif linetype == 'instruction':
-            section.data += _instruction_to_ints(*args)
+            instruction = _instruction_to_ints(*args)
+            print(instruction)
+            section.data += instruction
         else:
-            print(linetype, args)
+            raise Exception("Invalid line: "+line)
 
     return elf

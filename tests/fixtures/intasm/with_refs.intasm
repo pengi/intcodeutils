@@ -1,0 +1,12 @@
+@section .text
+
+-- comment
+
+    add sym,[0],[0]
+    add sym+1,[0],[0]
+    add sym-1,[0],[0]
+sym:
+    add [sym],[0],[0]
+    add [sym+1],[0],[0]
+    add [sym-1],[0],[0]
+    exit

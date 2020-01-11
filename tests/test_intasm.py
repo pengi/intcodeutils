@@ -7,7 +7,8 @@ from io import StringIO
 
 # Elffiles holding the same structure, so content can be asserted upon
 matching_intelf = [
-    'tests/fixtures/intasm/simple_a.intasm'
+    'tests/fixtures/intasm/no_refs.intasm',
+    'tests/fixtures/intasm/with_refs.intasm',
 ]
 
 @pytest.mark.parametrize("intasm_file", matching_intelf)
