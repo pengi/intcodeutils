@@ -1,0 +1,9 @@
+.text: 1,2,3,func1+4,func2,var+3,var-3
+_.dontuse: 0
+main.offset: 0
+func1.offset: 3
+func1.dont_use: 3
+func2.offset: -2
+
+.data: 100,101,102
+var.offset: 0
