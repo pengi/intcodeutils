@@ -1,5 +1,5 @@
 import pytest
-from intutils import output_intelf, parse_intelf
+from intutils import output_intelf, parse_intelf, IntElfError
 import sys
 from io import StringIO
 
@@ -12,6 +12,16 @@ simple_elffiles = [
 # Elffiles holding the output format (with exception of possible linebreaks at end)
 plain_elffiles = [
     'tests/fixtures/intelf/simple_plain.intelf'
+]
+
+err_elffiles = [
+    ('tests/fixtures/intelf/err_no_sym_argument.intelf', IntElfError),
+    ('tests/fixtures/intelf/err_invalid_line.intelf', IntElfError),
+    ('tests/fixtures/intelf/err_duplicate_sections.intelf', IntElfError),
+    ('tests/fixtures/intelf/err_duplicate_symbols.intelf', IntElfError),
+    ('tests/fixtures/intelf/err_symbol_without_section.intelf', IntElfError),
+    ('tests/fixtures/intelf/err_malformed_var_plus_plus.intelf', IntElfError),
+    ('tests/fixtures/intelf/err_malformed_empty.intelf', IntElfError),
 ]
 
 @pytest.mark.parametrize("filename", simple_elffiles)
@@ -46,3 +56,9 @@ def test_output_intelf(filename):
         outp = StringIO()
         output_intelf(elf, file=outp)
         assert outp.getvalue().rstrip() == expect.rstrip()
+
+@pytest.mark.parametrize("intelf_file,exception", err_elffiles)
+def test_error_intasm(intelf_file,exception):
+    with pytest.raises(exception):
+        with open(intelf_file, 'r') as intelf:
+            parse_intelf(intelf)

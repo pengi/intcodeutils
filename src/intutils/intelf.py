@@ -5,11 +5,14 @@ import sys
 _pat_sym='[a-z_][a-z_0-9]*'
 _pat_section='(?:\\.'+_pat_sym+')+'
 
-_pat_line_section = re.compile('^[\\s]*('+_pat_section+'):[\\s]*(.*[^\\s])[\\s]*$')
-_pat_line_arg = re.compile('^[\\s]*('+_pat_sym+')\\.([a-z0-9]+):[\\s]*(.*[^\\s])[\\s]*$')
+_pat_line_section = re.compile('^('+_pat_section+'):[\\s]*(.*)$')
+_pat_line_arg = re.compile('^('+_pat_sym+')\\.('+_pat_sym+'):[\\s]*(.*)$')
 
-_pat_val_rel = re.compile('^[\\s]*('+_pat_sym+')[\\s]*([+-][\\s]*[0-9]+|)[\\s]*$')
-_pat_val_abs = re.compile('^[\\s]*([+-]?[\\s]*[0-9]+)[\\s]*$')
+_pat_val_rel = re.compile('^('+_pat_sym+')([+-][0-9]+|)$')
+_pat_val_abs = re.compile('^([+-]?[0-9]+)$')
+
+class IntElfError(Exception):
+    pass
 
 def _parse_section(data):
     args = data.split(",")
@@ -35,29 +38,46 @@ def _parse_section(data):
             section.data.append((None,value))
             
         if not found:
-            # Error
-            pass
+            raise IntElfError("Malformed value: " + arg)
     return section
 
 def parse_intelf(f):
     elf = IntElfFile()
     section = None
     for line in f:
+        line = line.strip()
+
+        # Ignore empty lines
+        if line == '':
+            continue
+
         match = _pat_line_section.match(line)
         if match:
             name, content = match.groups()
+            if elf.sections.get(name):
+                raise IntElfError("Duplicate section: " + name)
             section = _parse_section(content)
             elf.sections[name] = section
+            continue
+
         match = _pat_line_arg.match(line)
         if match:
             name, arg, val = match.groups()
+            if section is None:
+                raise IntElfError("Argument without section")
             if name == '_':
                 # Section parameter, ignore all for now
                 pass
             else:
                 # Currently only "offset" is supported, ignore others
                 if arg == "offset":
+                    if section.symbols.get(name):
+                        raise IntElfError("Duplicate symbol: " + name)
                     section.symbols[name] = IntElfSymbol(int(val, 10))
+            continue
+
+        raise IntElfError("Invalid line")
+
     return elf
 
 
