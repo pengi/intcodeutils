@@ -9,4 +9,4 @@ sym:
     add [sym],[0],[0]
     add [sym+1],[0],[0]
     add [sym-1],[0],[0]
-    exit
+    halt

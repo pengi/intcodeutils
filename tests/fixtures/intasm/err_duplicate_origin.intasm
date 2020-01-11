@@ -3,4 +3,4 @@
 @origin 200
 
 main:
-    exit
+    halt

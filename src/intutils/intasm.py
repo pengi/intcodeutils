@@ -11,7 +11,7 @@ import re
 # 7 = compare <
 # 8 = compare =
 # 9 = update SP
-# 99 = exit
+# 99 = halt
 
 _pat_sym='[a-z_][a-z_0-9]*'
 _pat_section='(?:\\.'+_pat_sym+')+'
@@ -39,7 +39,7 @@ _instructions = {
     'clt': (7, 3),
     'ceq': (8, 3),
     'addsp': (9, 1),
-    'exit': (99, 0)
+    'halt': (99, 0)
 }
 
 _arg_mode_mem = 0

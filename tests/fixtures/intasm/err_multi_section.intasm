@@ -1,8 +1,8 @@
 @section .text
 func_a:
-    exit
+    halt
 
 -- error: same section name
 @section .text
 func_b:
-    exit
+    halt

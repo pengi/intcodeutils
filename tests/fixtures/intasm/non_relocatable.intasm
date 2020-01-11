@@ -2,10 +2,10 @@
 @origin 0
 
 main:
-    exit
+    halt
 
 @section .data
 @origin 1000
 
 var:
-    exit
+    halt

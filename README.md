@@ -110,23 +110,25 @@ There are three kinds of lines:
 
 Available instructions are:
 
-* `add a,b,c` - Add `a` and `b`, store at `c`
-* `mul a,b,c` - Multiply `a` and `b`, store at `c`
-* `in a` - Input a value, store at `a`
-* `out a` - Output value `a`
-* `jt a,b` - Jump to `b` if `a` is not zero (is true)
-* `jf a,b` - Jump to `b` if `a` is zero (is false)
-* `clt a,b,c` - Compare `a` and `b`, store `1` in `c` if `a<b`, store `0` otherwise
-* `ceq a,b,c` - Compare `a` and `b`, store `1` in `c` if `a=b`, store `0` otherwise
-* `sp a` - Increases stack pointer with `a`
-* `exit` - Halt the intcode computer
+| Instruction | Description                                                         |
+| ----------- | ------------------------------------------------------------------- |
+| `add a,b,c` | Add `a` and `b`, store at `c`                                       |
+| `mul a,b,c` | Multiply `a` and `b`, store at `c`                                  |
+| `in a`      | Input a value, store at `a`                                         |
+| `out a`     | Output value `a`                                                    |
+| `jt a,b`    | Jump to `b` if `a` is not zero (is true)                            |
+| `jf a,b`    | Jump to `b` if `a` is zero (is false)                               |
+| `clt a,b,c` | Compare `a` and `b`, store `1` in `c` if `a<b`, store `0` otherwise |
+| `ceq a,b,c` | Compare `a` and `b`, store `1` in `c` if `a=b`, store `0` otherwise |
+| `addsp a`   | Increases stack pointer with `a`                                    |
+| `halt`      | Halt the intcode computer                                           |
 
 Values can be written in 5 formats:
 
-Format                          | Example         | Description
---------------------------------|-----------------|-------------
-Immediate                       | `32`, `-12`     | Contant value
-Symbol relative                 | `var`, `var+12` | Contant address
-Memory lookup, constant address | `[32]`          | Value at contant memory location
-Memory lookup, symbol relative  | `[var+12]`      | Value at address relative to symbol
-Memory lookup, stack relative   | `[%sp+12]`      | Value at address relative to current stack pointer
+| Format                          | Example         | Description                                        |
+| ------------------------------- | --------------- | -------------------------------------------------- |
+| Immediate                       | `32`, `-12`     | Contant value                                      |
+| Symbol relative                 | `var`, `var+12` | Contant address                                    |
+| Memory lookup, constant address | `[32]`          | Value at contant memory location                   |
+| Memory lookup, symbol relative  | `[var+12]`      | Value at address relative to symbol                |
+| Memory lookup, stack relative   | `[%sp+12]`      | Value at address relative to current stack pointer |
