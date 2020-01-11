@@ -9,6 +9,7 @@ from io import StringIO
 matching_intelf = [
     'tests/fixtures/intasm/no_refs.intasm',
     'tests/fixtures/intasm/with_refs.intasm',
+    'tests/fixtures/intasm/multi_section.intasm',
 ]
 
 @pytest.mark.parametrize("intasm_file", matching_intelf)

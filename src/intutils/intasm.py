@@ -13,17 +13,17 @@ import re
 # 9 = update SP
 # 99 = exit
 
-_sym_match='[a-z_][a-z_0-9]*'
+_pat_sym='[a-z_][a-z_0-9]*'
 
 _pat_line_comment = re.compile('^--.*$')
 _pat_line_meta = re.compile('^@([a-z]+)[\\s]+([^\\s].*)$')
 _pat_line_symbol = re.compile('^([^\\s]+):$')
-_pat_line_instruction = re.compile('^('+_sym_match+')(?:[\\s]+([^\\s]*)|)$')
+_pat_line_instruction = re.compile('^('+_pat_sym+')(?:[\\s]+([^\\s]*)|)$')
 
 _pat_arg_imm = re.compile('^((?:[-+]|)[0-9]+)$')
 _pat_arg_mem = re.compile('^\\[([0-9]+)\\]$')
-_pat_arg_sym_imm = re.compile('^('+_sym_match+')(|[-+]?[0-9]+)$')
-_pat_arg_sym_mem = re.compile('^\\[('+_sym_match+')(|[+-][0-9]+)\\]$')
+_pat_arg_sym_imm = re.compile('^('+_pat_sym+')(|[-+]?[0-9]+)$')
+_pat_arg_sym_mem = re.compile('^\\[('+_pat_sym+')(|[+-][0-9]+)\\]$')
 _pat_arg_sp_mem = re.compile('^\\[%sp([+-][0-9]+)\\]$')
 
 _instructions = {
@@ -132,7 +132,6 @@ def parse_intasm(file):
             section.symbols[name] = IntElfSymbol(len(section.data))
         elif linetype == 'instruction':
             instruction = _instruction_to_ints(*args)
-            print(instruction)
             section.data += instruction
         else:
             raise Exception("Invalid line: "+line)

@@ -2,10 +2,12 @@ from .model import IntElfFile, IntElfSection, IntElfSymbol
 import re
 import sys
 
-_pat_section = re.compile('^[\\s]*(\\.[a-z0-9\\.-_]+):[\\s]*(.*[^\\s])[\\s]*$')
-_pat_arg = re.compile('^[\\s]*([a-z0-9]+)\\.([a-z0-9]+):[\\s]*(.*[^\\s])[\\s]*$')
+_pat_sym='[a-z_][a-z_0-9]*'
 
-_pat_val_rel = re.compile('^[\\s]*([a-z][a-z0-9]*)[\\s]*([+-][\\s]*[0-9]+|)[\\s]*$')
+_pat_section = re.compile('^[\\s]*(\\.[a-z0-9\\.-_]+):[\\s]*(.*[^\\s])[\\s]*$')
+_pat_arg = re.compile('^[\\s]*('+_pat_sym+')\\.([a-z0-9]+):[\\s]*(.*[^\\s])[\\s]*$')
+
+_pat_val_rel = re.compile('^[\\s]*('+_pat_sym+')[\\s]*([+-][\\s]*[0-9]+|)[\\s]*$')
 _pat_val_abs = re.compile('^[\\s]*([+-]?[\\s]*[0-9]+)[\\s]*$')
 
 def _parse_section(data):
