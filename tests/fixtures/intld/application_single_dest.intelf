@@ -1,0 +1,5 @@
+.exec: 1,2,3,99
+_.origin: 0
+loader.offset: 0
+main.offset: 3
+stack.offset: 4

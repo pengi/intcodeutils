@@ -1,4 +1,4 @@
-from .model import IntElfFile, IntElfSection, IntElfSymbol
+from .model import IntElfFile, IntElfSection, IntElfSymbol, IntElfError
 import re
 import sys
 
@@ -10,9 +10,6 @@ _pat_line_arg = re.compile('^('+_pat_sym+')\\.('+_pat_sym+'):[\\s]*(.*)$')
 
 _pat_val_rel = re.compile('^('+_pat_sym+')([+-][0-9]+|)$')
 _pat_val_abs = re.compile('^([+-]?[0-9]+)$')
-
-class IntElfError(Exception):
-    pass
 
 def _parse_section(data):
     section = IntElfSection()

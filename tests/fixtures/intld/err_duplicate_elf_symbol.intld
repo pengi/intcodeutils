@@ -1,0 +1,3 @@
+.exec:
+    origin 0
+    load .text.*

@@ -1,0 +1,5 @@
+.exec:
+    origin 0
+    load .loader
+    load .text.*
+    sym stack
