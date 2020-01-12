@@ -1,7 +1,7 @@
 import pytest
 from intutils import merge_intelfs, parse_intelf, output_intelf, IntElfError, IntLDError
 from io import StringIO
-from intutils.intld_merge import _match_symbol_pattern
+from intutils.intld import _match_symbol_pattern
 
 prefix = 'tests/fixtures/intld_merge/'
 
