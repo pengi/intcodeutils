@@ -14,7 +14,8 @@ simple_elffiles = [
 plain_elffiles = [
     prefix+'simple_plain.intelf',
     prefix+'non_relocatable.intelf',
-    prefix+'empty_section.intelf'
+    prefix+'empty_section.intelf',
+    prefix+'section_relative.intelf',
 ]
 
 err_elffiles = [

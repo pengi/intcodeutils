@@ -8,7 +8,7 @@ _pat_section='(?:\\.'+_pat_sym+')+'
 _pat_line_section = re.compile('^('+_pat_section+'):(.*)$')
 _pat_line_arg = re.compile('^('+_pat_sym+')\\.('+_pat_sym+'):[\\s]*(.*)$')
 
-_pat_val_rel = re.compile('^('+_pat_sym+')([+-][0-9]+|)$')
+_pat_val_rel = re.compile('^('+_pat_sym+'|\\.)([+-][0-9]+|)$')
 _pat_val_abs = re.compile('^([+-]?[0-9]+)$')
 
 def _parse_section(data):

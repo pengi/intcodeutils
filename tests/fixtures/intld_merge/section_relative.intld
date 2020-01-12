@@ -1,0 +1,3 @@
+.text:
+    load .text.a
+    load .text.b

@@ -6,7 +6,8 @@ from intcodeutils.intld import _match_symbol_pattern
 prefix = 'tests/fixtures/intld_merge/'
 
 programs = [
-    (prefix+'application_single', [prefix+'loader.intelf'])
+    (prefix+'application_single', [prefix+'loader.intelf']),
+    (prefix+'section_relative', []),
 ]
 
 error_intld = [
@@ -23,7 +24,7 @@ error_intld = [
 
 
 @pytest.mark.parametrize("testcase_prefix,extra_elfs", programs)
-def test_merge_intelfs(testcase_prefix, extra_elfs):
+def test_merge_intelfs_success(testcase_prefix, extra_elfs):
     elfs = []
     for fname in extra_elfs:
         with open(fname, 'r') as f:
@@ -44,7 +45,7 @@ def test_merge_intelfs(testcase_prefix, extra_elfs):
 
 
 @pytest.mark.parametrize("filename,extra_elfs,exception", error_intld)
-def test_merge_intelfs(filename, extra_elfs, exception):
+def test_merge_intelfs_errors(filename, extra_elfs, exception):
     elfs = []
     for fname in extra_elfs:
         with open(fname, 'r') as f:

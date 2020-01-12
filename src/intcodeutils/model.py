@@ -19,7 +19,7 @@ class IntElfSection:
             raise IntElfError('appending non-relocatable section')
 
         offset = len(self.data)
-        self.data += [(k,v) for (k,v) in section.data]
+        self.data += [(k,(v+offset) if k=='.' else v) for (k,v) in section.data]
 
         for name, symbol in section.symbols.items():
             if self.symbols.get(name):
