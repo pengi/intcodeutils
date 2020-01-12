@@ -16,15 +16,14 @@ More information about Advent of Code is available their [homepage](https://adve
 
 Recommended method of testing is using pip, in an virtualenv
 
-### Run in a shell
-
+Run in a shell:
 ```
 $ virtualenv venv
 $ . venv/bin/activate
 $ pip install git+https://github.com/pengi/intutils.git
 ```
 
-### Commands available
+### Tools available
 
 ```
 $ intcode-asm
