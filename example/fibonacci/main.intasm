@@ -1,0 +1,34 @@
+@section .text
+
+-- main()
+main:
+    addsp 1
+    in [%sp+1]
+
+-- call fib()
+    add _main_ret1, 0, [%sp+0]
+    jf 0,fib
+_main_ret1:
+
+    out [%sp+1]
+    addsp -1
+    jf 0,[%sp+0]
+
+-- fib(n)
+fib:
+    addsp 5
+    add 0,1,[%sp-3]
+    add 1,1,[%sp-2]
+
+_fib_loop:
+    jf [%sp-4], _fib_return
+    add [%sp-2], [%sp-3], [%sp-1]
+    add 0, [%sp-2], [%sp-3]
+    add 0, [%sp-1], [%sp-2]
+    add -1, [%sp-4], [%sp-4]
+    jf 0, _fib_loop
+
+_fib_return:
+    add 0, [%sp-3], [%sp-4]
+    addsp -5
+    jf 0,[%sp+0]

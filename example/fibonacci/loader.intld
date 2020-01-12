@@ -1,0 +1,6 @@
+.exec:
+    origin 0
+    load .loader
+    load .text.*
+    load .data.*
+    sym _stack
