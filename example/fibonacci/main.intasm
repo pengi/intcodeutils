@@ -6,9 +6,8 @@ main:
     in [%sp+1]
 
 -- call fib()
-    add _main_ret1, 0, [%sp+0]
-    jf 0,fib
-_main_ret1:
+    add %pc+7, 0, [%sp+0]
+    jf 0, fib
 
     out [%sp+1]
     addsp -1

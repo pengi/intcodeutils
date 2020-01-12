@@ -25,9 +25,8 @@ _re_line_instruction = re.compile('^([a-z]+)(?:[\\s]+([^\\s].*)|)$')
 
 _re_arg_imm = re.compile('^((?:[-+]|)[0-9]+)$')
 _re_arg_mem = re.compile('^\\[([0-9]+)\\]$')
-_re_arg_sym_imm = re.compile('^('+_pat_sym+')(|[-+]?[0-9]+)$')
-_re_arg_sym_mem = re.compile('^\\[('+_pat_sym+')(|[+-][0-9]+)\\]$')
-_re_arg_sp_mem = re.compile('^\\[%sp([+-][0-9]+)\\]$')
+_re_arg_sym_imm = re.compile('^('+_pat_sym+'|%[a-z]+|\\.)(|[-+]?[0-9]+)$')
+_re_arg_sym_mem = re.compile('^\\[('+_pat_sym+'|%[a-z]+|\\.)(|[+-][0-9]+)\\]$')
 
 _instructions = {
     'add': (1, 3),
@@ -59,7 +58,7 @@ def _str_to_int(in_str):
         return 0
     return int(in_str, 10)
 
-def _parse_line(line):
+def _parse_line(line, cur_pc):
     line = line.strip()
     if line == "":
         return (None, None)
@@ -91,15 +90,23 @@ def _parse_line(line):
                     continue
                 match = _re_arg_sym_imm.match(argstr)
                 if match:
-                    args.append((_arg_mode_immediate, (match.group(1), _str_to_int(match.group(2)))))
+                    ref, value = match.groups()
+                    value = _str_to_int(value)
+                    if ref == '%pc':
+                        args.append((_arg_mode_immediate, ('.', value + cur_pc)))
+                    else:
+                        args.append((_arg_mode_immediate, (ref, value)))
                     continue
                 match = _re_arg_sym_mem.match(argstr)
                 if match:
-                    args.append((_arg_mode_mem, (match.group(1), _str_to_int(match.group(2)))))
-                    continue
-                match = _re_arg_sp_mem.match(argstr)
-                if match:
-                    args.append((_arg_mode_sp_rel, (None, _str_to_int(match.group(1)))))
+                    ref, value = match.groups()
+                    value = _str_to_int(value)
+                    if ref == '%sp':
+                        args.append((_arg_mode_sp_rel, (None, value)))
+                    elif ref == '%pc':
+                        args.append((_arg_mode_mem, ('.', value + cur_pc)))
+                    else:
+                        args.append((_arg_mode_mem, (ref, value)))
                     continue
                 raise IntAsmError("Unknown argument")
         return ('instruction', (mnemonic, args))
@@ -125,7 +132,10 @@ def parse_intasm(file):
     elf = IntElfFile()
 
     for line in file:
-        linetype, args = _parse_line(line)
+        cur_pc = None
+        if section is not None:
+            cur_pc = len(section.data)
+        linetype, args = _parse_line(line, cur_pc)
         if linetype is None:
             pass
         elif linetype == 'meta':

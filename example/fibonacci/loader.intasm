@@ -3,9 +3,8 @@
     addsp _stack
     
 -- call main function
-    add _loader_ret1, 0, [%sp+0]
+    add %pc+7, 0, [%sp+0]
     jf 0, main
-_loader_ret1:
 
 -- halt after main
     halt

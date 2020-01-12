@@ -1,0 +1,6 @@
+@section .text
+main:
+    add [2],[3],[4]
+    add [%pc+100], [.+100], [4]
+    add %pc+100, .+100, [4]
+    halt

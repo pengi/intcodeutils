@@ -11,6 +11,7 @@ matching_intasm = [
     'tests/fixtures/intasm/with_refs.intasm',
     'tests/fixtures/intasm/multi_section.intasm',
     'tests/fixtures/intasm/non_relocatable.intasm',
+    'tests/fixtures/intasm/pc_and_section_relative.intasm',
 ]
 
 error_intasm = [
@@ -26,6 +27,7 @@ error_intasm = [
     ('tests/fixtures/intasm/err_origin_after_labels.intasm', IntAsmError),
     ('tests/fixtures/intasm/err_symbol_without_section.intasm', IntAsmError),
 ]
+
 
 @pytest.mark.parametrize("intasm_file", matching_intasm)
 def test_parse_intasm(intasm_file):
@@ -45,8 +47,9 @@ def test_parse_intasm(intasm_file):
 
     assert actual == expect
 
+
 @pytest.mark.parametrize("intasm_file,exception", error_intasm)
-def test_error_intasm(intasm_file,exception):
+def test_error_intasm(intasm_file, exception):
     with pytest.raises(exception):
         with open(intasm_file, 'r') as intasm:
             parse_intasm(intasm)
