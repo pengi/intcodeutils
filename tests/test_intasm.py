@@ -6,6 +6,7 @@ from io import StringIO
 
 # Elffiles holding the same structure, so content can be asserted upon
 matching_intasm = [
+    'tests/fixtures/intasm/comments_and_spaces.intasm',
     'tests/fixtures/intasm/no_refs.intasm',
     'tests/fixtures/intasm/with_refs.intasm',
     'tests/fixtures/intasm/multi_section.intasm',
