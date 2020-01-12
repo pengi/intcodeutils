@@ -55,7 +55,7 @@ The intcode files is handled by intcodeutils as described in the puzzles, using 
 
 ## intelf
 
-To be able to link mulitple files, a file that can be read by the intcode-[elf](https://en.wikipedia.org/wiki/Elf)s is requred, containing linking information. For non-intcode computers, the [elf](https://en.wikipedia.org/wiki/Executable_and_Linkable_Format) files exists.
+To be able to link mulitple files, a file that can be read by the intcode-[elf](https://en.wikipedia.org/wiki/Christmas_elf)s is requred, containing linking information. For non-intcode computers, the [elf](https://en.wikipedia.org/wiki/Executable_and_Linkable_Format) files exists.
 
 For intcode, an intelf file is available, containing intcode with relocation information, and symbol names
 
