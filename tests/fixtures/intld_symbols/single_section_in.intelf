@@ -1,0 +1,4 @@
+.exec: main,2,var+3,1,2,3,99,0,0,0,0
+_.origin: 0
+main.offset: 4
+var.offset: 7

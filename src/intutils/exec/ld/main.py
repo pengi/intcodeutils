@@ -30,5 +30,5 @@ def main():
     elfs = []
     for elf_file in args.elf_files:
         elfs.append(parse_intelf(elf_file))
-    output_elf = merge_intelfs(args.ld_file, elfs)
+    output_elf = merge_intelfs(args.ld_file, elfs).clone_resolve_symbols()
     output_intelf(output_elf, file=args.out)

@@ -1,0 +1,7 @@
+.text: 1,func,var,var+1,99,1,2,3
+main.offset: 0
+func.offset: 5
+
+.data: 0,0,0,0
+_.origin: 100
+var.offset: 2

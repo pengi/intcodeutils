@@ -1,0 +1,7 @@
+.text: 1,2,var,var+1,99
+_.origin: 0
+main.offset: 0
+
+.data: 0,0,0,0
+_.origin: 100
+var.offset: 2
