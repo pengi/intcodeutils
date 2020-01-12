@@ -1,10 +1,10 @@
 @section .loader
--- Setup stack
+; Setup stack
     addsp _stack
     
--- call main function
+; call main function
     add %pc+7, 0, [%sp+0]
     jf 0, main
 
--- halt after main
+; halt after main
     halt

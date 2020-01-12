@@ -1,11 +1,11 @@
 @section .text
 
--- main()
+; main()
 main:
     addsp 1
     in [%sp+1]
 
--- call fib()
+; call fib()
     add %pc+7, 0, [%sp+0]
     jf 0, fib
 
@@ -13,7 +13,7 @@ main:
     addsp -1
     jf 0,[%sp+0]
 
--- fib(n)
+; fib(n)
 fib:
     addsp 5
     add 0,1,[%sp-3]

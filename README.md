@@ -111,11 +111,12 @@ sym_b:
     jt [6],[7]
 ```
 
-There are three kinds of lines:
+There are four kinds of lines:
 
 1. `@section` starts a section
 2. `label:` defines a label (which currently also is a symbol...)
 3. `op arg1,arg2,arg3` is an instruction, which will be converted to intcode
+4. `; comment` is a comment line. The line must start with `;` (except for whitespaces)
 
 Available instructions are:
 

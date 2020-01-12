@@ -2,7 +2,7 @@
 func_a:
     halt
 
--- error: same section name
+; error: same section name
 @section .text
 func_b:
     halt

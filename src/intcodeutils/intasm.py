@@ -18,7 +18,7 @@ _pat_section='(?:\\.'+_pat_sym+')+'
 
 _re_section = re.compile('^' + _pat_section + '$')
 
-_re_line_comment = re.compile('^--.*$')
+_re_line_comment = re.compile('^;.*$')
 _re_line_meta = re.compile('^@([a-z]+)[\\s]+([^\\s].*)$')
 _re_line_symbol = re.compile('^('+_pat_sym+'):$')
 _re_line_instruction = re.compile('^([a-z]+)(?:[\\s]+([^\\s].*)|)$')

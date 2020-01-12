@@ -1,4 +1,4 @@
 @section .text
 main:
--- too many arguments
+; too many arguments
     jt 1,2,3

@@ -1,6 +1,6 @@
 @section .text
 
--- comment
+; comment
 
 main:
     add [%sp-2],2,[3]
