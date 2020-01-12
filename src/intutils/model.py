@@ -38,6 +38,12 @@ class IntElfSection:
             else:
                 out_section.data.append((rel_name, value))
         return out_section
+    
+    def export(self):
+        for rel, _value in self.data:
+            if rel is not None:
+                raise IntElfError('exporting with unresolved relocation')
+        return [value for k,value in self.data]
 
 class IntElfFile:
     def __init__(self):
@@ -59,3 +65,17 @@ class IntElfFile:
             out_elf.sections[section_name] = section.clone_resolve_symbols(absolute_symbols)
         
         return out_elf
+
+    def export(self):
+        length = 0
+        for section in self.sections.values():
+            if section.origin is None:
+                raise IntElfError('exporting with relocatable sections')
+            section_end = section.origin + len(section.data)
+            if section_end > length:
+                length = section_end
+
+        values = [0] * length
+        for section in self.sections.values():
+            values[section.origin:section.origin+len(section.data)] = section.export()
+        return values
