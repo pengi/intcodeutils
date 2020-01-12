@@ -1,9 +1,9 @@
 import pytest
 from intutils import merge_intelfs, parse_intelf, output_intelf, IntElfError, IntLDError
 from io import StringIO
-import intutils.intld
+from intutils.intld_merge import _match_symbol_pattern
 
-prefix = 'tests/fixtures/intld/'
+prefix = 'tests/fixtures/intld_merge/'
 
 programs = [
     (prefix+'application_single', [prefix+'loader.intelf'])
@@ -68,4 +68,4 @@ symbol_matches = [
 
 @pytest.mark.parametrize("pattern,section,match", symbol_matches)
 def test_intld_symbol_match(pattern, section, match):
-    assert intutils.intld._match_symbol_pattern(pattern, section) == match
+    assert _match_symbol_pattern(pattern, section) == match
