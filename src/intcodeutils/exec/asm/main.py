@@ -1,6 +1,6 @@
 import argparse
-from intutils import parse_intasm
-from intutils import output_intelf
+from intcodeutils import parse_intasm
+from intcodeutils import output_intelf
 import sys
 
 parser = argparse.ArgumentParser(description='IntCode assembly')

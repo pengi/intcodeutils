@@ -1,5 +1,5 @@
 import pytest
-from intutils import parse_intelf, output_intelf
+from intcodeutils import parse_intelf, output_intelf
 from io import StringIO
 
 prefix = 'tests/fixtures/intld_symbols/'

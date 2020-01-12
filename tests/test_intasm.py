@@ -1,6 +1,6 @@
 import pytest
-from intutils import output_intelf
-from intutils import parse_intasm, IntAsmError
+from intcodeutils import output_intelf
+from intcodeutils import parse_intasm, IntAsmError
 from io import StringIO
 
 

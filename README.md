@@ -1,4 +1,4 @@
-# intutils
+# intcodeutils
 
 Intcode toolchain for Advent of Code 2019 intcode computer
 
@@ -8,7 +8,7 @@ The toolchain originates around the intelf format, a format understandable by th
 
 An advent calender with programming puzzles, made by Eric Wastl
 
-Author of intutils is not affiliated with Advent of Code
+Author of intcodeutils is not affiliated with Advent of Code
 
 More information about Advent of Code is available their [homepage](https://adventofcode.com)
 
@@ -20,7 +20,7 @@ Run in a shell:
 ```
 $ virtualenv venv
 $ . venv/bin/activate
-$ pip install git+https://github.com/pengi/intutils.git
+$ pip install git+https://github.com/pengi/intcodeutils.git
 ```
 
 ### Tools available
@@ -31,7 +31,7 @@ $ intcode-ld
 $ intcode-objcopy
 ```
 
-Since intutils is under development, it is not recommended to install outside a virtualenv.
+Since intcodeutils is under development, it is not recommended to install outside a virtualenv.
 
 More information about virtualenv is available on their [homepage](https://virtualenv.pypa.io)
 
@@ -44,9 +44,9 @@ The intcode computer is described in detail in the puzzles building the computer
 * [Day 5](https://adventofcode.com/2019/day/5) - opcode 3,4 from part 1, 5,6,7,8 from part 2 and parameter mode 1
 * [Day 9](https://adventofcode.com/2019/day/9) - opcode 9 and parameter mode 2
 
-Note that the intcode computer contains a "base reference" from day 9. In intutils, it is called "stack pointer" or "sp".
+Note that the intcode computer contains a "base reference" from day 9. In intcodeutils, it is called "stack pointer" or "sp".
 
-The intcode files is handled by intutils as described in the puzzles, using the file extension .intcode
+The intcode files is handled by intcodeutils as described in the puzzles, using the file extension .intcode
 
 ### An example
 ```

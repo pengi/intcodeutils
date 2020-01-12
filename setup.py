@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 setup(
-    name="intutils",
+    name="intcodeutils",
     version="0.1",
     packages=find_packages('src'),
     author="Max Sikström",
@@ -11,9 +11,9 @@ setup(
 
     entry_points={
         'console_scripts': [
-            'intcode-asm = intutils.exec.asm.main:main',
-            'intcode-ld = intutils.exec.ld.main:main',
-            'intcode-objcopy = intutils.exec.objcopy.main:main'
+            'intcode-asm = intcodeutils.exec.asm.main:main',
+            'intcode-ld = intcodeutils.exec.ld.main:main',
+            'intcode-objcopy = intcodeutils.exec.objcopy.main:main'
         ]
     },
 

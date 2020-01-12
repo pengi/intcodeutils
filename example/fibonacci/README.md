@@ -1,8 +1,8 @@
 # Fibonacci calculation example
 
-Simple example using make and intutils to build a program calculating fibonacci numbers
+Simple example using make and intcodeutils to build a program calculating fibonacci numbers
 
-To assemble and link the program, make sure `make` is installed, as well as having intutils available. Then run
+To assemble and link the program, make sure `make` is installed, as well as having intcodeutils available. Then run
 
 ```
 make

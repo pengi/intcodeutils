@@ -1,5 +1,5 @@
 import argparse
-from intutils import parse_intasm, parse_intelf, output_intelf, merge_intelfs
+from intcodeutils import parse_intasm, parse_intelf, output_intelf, merge_intelfs
 import sys
 
 parser = argparse.ArgumentParser(description='IntCode object copy/exporter')
