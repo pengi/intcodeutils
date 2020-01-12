@@ -40,6 +40,8 @@ def merge_intelfs(ldfile, elfs):
             if op == 'origin':
                 if section.origin is not None:
                     raise IntLDError('Duplicate origin specified')
+                if len(section.data) > 0:
+                    raise IntLDError('origin can only be specified before adding data to section')
                 section.origin = int(value, 10)
             elif op == 'load':
                 for srcelf in elfs:

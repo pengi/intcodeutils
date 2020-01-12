@@ -16,6 +16,9 @@ error_intld = [
     ], IntElfError),
     (prefix + 'err_duplicate_explicit_symbol.intld', [], IntLDError),
     (prefix + 'err_duplicate_origin.intld', [], IntLDError),
+    (prefix + 'err_origin_after_load.intld', [
+        prefix + 'err_origin_after_load.intelf',
+    ], IntLDError),
 ]
 
 
