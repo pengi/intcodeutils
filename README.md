@@ -85,6 +85,14 @@ main.offset: 0
 var.offset: 0
 ```
 
+For relocation within a section, it it possible to add values relative to section start:
+
+```
+.text: 1101,2,3,.+4
+```
+
+Where . is the address of section start, when relocated
+
 ## Tool: intcode-asm
 
 Assembler for assembly language to intelf
@@ -124,7 +132,7 @@ Available instructions are:
 | `addsp a`   | Increases stack pointer with `a`                                    |
 | `halt`      | Halt the intcode computer                                           |
 
-Values can be written in 5 formats:
+Values can be written in 4 formats:
 
 | Format                          | Example         | Description                                        |
 | ------------------------------- | --------------- | -------------------------------------------------- |
@@ -132,7 +140,11 @@ Values can be written in 5 formats:
 | Symbol relative                 | `var`, `var+12` | Contant address                                    |
 | Memory lookup, constant address | `[32]`          | Value at contant memory location                   |
 | Memory lookup, symbol relative  | `[var+12]`      | Value at address relative to symbol                |
-| Memory lookup, stack relative   | `[%sp+12]`      | Value at address relative to current stack pointer |
+
+The `var` can have some special values:
+* `%sp` - The value of the current stack pointer
+* `%pc` - The address of the current instruction start address. Useful for relative jumps. Converted to `.+var` automatically
+* `.` - The address of section start, filled in when linking.
 
 ## Tool: intcode-ld
 
