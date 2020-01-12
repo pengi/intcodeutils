@@ -32,11 +32,14 @@ class IntElfSection:
             out_section.symbols[name] = sym.clone()
         out_section.origin = self.origin
         for rel_name, value in self.data:
-            rel_value = symbols.get(rel_name)
-            if rel_value is not None:
-                out_section.data.append((None, rel_value + value))
+            if self.origin is not None and rel_name == '.':
+                out_section.data.append((None, value + self.origin))
             else:
-                out_section.data.append((rel_name, value))
+                rel_value = symbols.get(rel_name)
+                if rel_value is not None:
+                    out_section.data.append((None, rel_value + value))
+                else:
+                    out_section.data.append((rel_name, value))
         return out_section
     
     def export(self):

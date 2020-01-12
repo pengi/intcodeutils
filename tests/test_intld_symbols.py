@@ -8,6 +8,7 @@ success_files = [
     prefix + 'single_section',
     prefix + 'multi_section',
     prefix + 'partial_relocatable',
+    prefix + 'section_relative',
 ]
 
 @pytest.mark.parametrize("testcase", success_files)
