@@ -18,7 +18,8 @@ setup(
     },
 
     install_requires=[
-        'argparse>=1.4'
+        'argparse>=1.4',
+        'sly>=0.3'
     ],
 
     extras_require={
