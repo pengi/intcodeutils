@@ -58,3 +58,13 @@ class IntelvishASTStmtIf(IntelvishASTStmt):
         if self.if_false is not None:
             if_false = [stmt.simplify() for stmt in self.if_false]
         return IntelvishASTStmtIf(expr, if_true, if_false)
+
+class IntelvishASTStmtVar(IntelvishASTStmt):
+    def __init__(self, name):
+        self.name = name
+    
+    def __str__(self):
+        return str_format('stmt_var', self.name)
+    
+    def simplify(self):
+        return IntelvishASTStmtVar(self.name)

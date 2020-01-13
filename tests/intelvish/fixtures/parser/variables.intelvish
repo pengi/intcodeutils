@@ -1,0 +1,9 @@
+var global;
+
+def func() {
+    var local;
+
+    if (x == 0) {
+        var within_block;
+    }
+}

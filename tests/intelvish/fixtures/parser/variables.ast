@@ -1,0 +1,20 @@
+file [
+  decl_var global
+  func func {
+    args: [
+    ]
+    stmts: [
+      stmt_var local
+      if {
+        condition: expr_eq [
+          expr_var x
+          expr_const 0
+        ]
+        if_true: [
+          stmt_var within_block
+        ]
+        if_false: None
+      }
+    ]
+  }
+]

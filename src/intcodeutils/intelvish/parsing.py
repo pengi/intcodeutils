@@ -7,7 +7,7 @@ class IntelvishError(Exception):
 
 
 class IntelvishLexer(Lexer):
-    tokens = {NAME, DEF, IF, ELSE, WHILE, RETURN, NUMBER, PLUS, MINUS,
+    tokens = {NAME, DEF, VAR, IF, ELSE, WHILE, RETURN, NUMBER, PLUS, MINUS,
               TIMES, EQ, ASSIGN, LE, LT, GE, GT, NE, NOT}
     ignore = r' \t'
     literals = {'(', ')', '{', '}', ';', ','}
@@ -28,6 +28,7 @@ class IntelvishLexer(Lexer):
         return t
 
     NAME['def'] = DEF
+    NAME['var'] = VAR
     NAME['return'] = RETURN
     NAME['if'] = IF
     NAME['else'] = ELSE
@@ -53,7 +54,7 @@ class IntelvishLexer(Lexer):
 
 class IntelvishParser(Parser):
     tokens = IntelvishLexer.tokens
-    start = 'elf'
+    start = 'top'
     
     precedence = (
           ('right', ASSIGN),
@@ -67,13 +68,13 @@ class IntelvishParser(Parser):
     # Top level
     
     @_('')
-    def elf(self, p):
+    def top(self, p):
         return IntelvishASTFile()
 
-    @_('elf decl')
-    def elf(self, p):
-        p.elf.add_decl(p.decl)
-        return p.elf
+    @_('top decl')
+    def top(self, p):
+        p.top.add_decl(p.decl)
+        return p.top
     
     
     # Function
@@ -94,9 +95,16 @@ class IntelvishParser(Parser):
     def args(self, p):
         return p.args + [p.arg]
 
+
+    # Declarations
+
     @_('DEF NAME "(" args ")" "{" stmts "}"')
     def decl(self, p):
         return IntelvishASTDeclFunc(p.NAME, p.args, p.stmts)
+
+    @_('VAR NAME ";"')
+    def decl(self, p):
+        return IntelvishASTDeclVar(p.NAME)
         
         
     # Statements
@@ -128,6 +136,10 @@ class IntelvishParser(Parser):
     @_('IF "(" expr ")" "{" stmts "}" ELSE "{" stmts "}"')
     def stmt(self, p):
         return IntelvishASTStmtIf(p.expr, p.stmts0, p.stmts1)
+
+    @_('VAR NAME ";"')
+    def stmt(self, p):
+        return IntelvishASTStmtVar(p.NAME)
     
     # Variables
 
