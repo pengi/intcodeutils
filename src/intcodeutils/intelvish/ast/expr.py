@@ -2,7 +2,8 @@ from .helper import str_format
 
 
 class IntelvishASTExpr:
-    pass
+    def return_bool(self):
+        return False
 
 
 class IntelvishASTExprVar(IntelvishASTExpr):
@@ -67,6 +68,9 @@ class IntelvishASTExprMul(IntelvishASTExpr):
     def __str__(self):
         return str_format('expr_mul', None, [self.lhs, self.rhs])
 
+    def return_bool(self):
+        return self.lhs.return_bool() and self.rhs.return_bool()
+
     def simplify(self):
         lhs = self.lhs.simplify()
         rhs = self.rhs.simplify()
@@ -75,12 +79,63 @@ class IntelvishASTExprMul(IntelvishASTExpr):
         return IntelvishASTExprMul(lhs, rhs)
 
 
+class IntelvishASTExprLT(IntelvishASTExpr):
+    def __init__(self, lhs, rhs):
+        self.lhs = lhs
+        self.rhs = rhs
+
+    def __str__(self):
+        return str_format('expr_lt', None, [self.lhs, self.rhs])
+    
+    def return_bool(self):
+        return True
+
+    def simplify(self):
+        lhs = self.lhs.simplify()
+        rhs = self.rhs.simplify()
+        return IntelvishASTExprLT(lhs, rhs)
+
+
+class IntelvishASTExprEQ(IntelvishASTExpr):
+    def __init__(self, lhs, rhs):
+        self.lhs = lhs
+        self.rhs = rhs
+
+    def __str__(self):
+        return str_format('expr_eq', None, [self.lhs, self.rhs])
+    
+    def return_bool(self):
+        return True
+
+    def simplify(self):
+        lhs = self.lhs.simplify()
+        rhs = self.rhs.simplify()
+        return IntelvishASTExprEQ(lhs, rhs)
+
+
+class IntelvishASTExprNot(IntelvishASTExpr):
+    def __init__(self, expr):
+        self.expr = expr
+
+    def __str__(self):
+        return str_format('expr_not', None, self.expr)
+    
+    def return_bool(self):
+        return True
+
+    def simplify(self):
+        expr = self.expr.simplify()
+        if type(expr) == IntelvishASTExprNot and expr.expr.return_bool():
+            return expr.expr
+        return IntelvishASTExprNot(expr)
+
+
 class IntelvishASTExprNeg(IntelvishASTExpr):
     def __init__(self, expr):
         self.expr = expr
 
     def __str__(self):
-        return str_format('expr_neg', None, [self.expr])
+        return str_format('expr_neg', None, self.expr)
 
     def simplify(self):
         if type(self.expr) == IntelvishASTExprConstant:

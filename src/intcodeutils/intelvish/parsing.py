@@ -8,7 +8,7 @@ class IntelvishError(Exception):
 
 class IntelvishLexer(Lexer):
     tokens = {NAME, DEF, RETURN, NUMBER, PLUSPLUS, PLUS, MINUS,
-              TIMES, DIVIDE, EQ, ASSIGN, LE, LT, GE, GT, NE}
+              TIMES, DIVIDE, EQ, ASSIGN, LE, LT, GE, GT, NE, NOT}
     ignore = r' \t'
     literals = {'(', ')', '{', '}', ';', ','}
 
@@ -38,6 +38,7 @@ class IntelvishLexer(Lexer):
     DIVIDE = r'/'
     EQ = r'=='
     ASSIGN = r'='
+    NOT = r'!'
     LE = r'<='
     LT = r'<'
     GE = r'>='
@@ -56,7 +57,7 @@ class IntelvishParser(Parser):
           ('nonassoc', LE, LT, GE, GT, NE, EQ),
           ('left', PLUS, MINUS),
           ('left', TIMES, DIVIDE),
-          ('right', UMINUS),
+          ('right', UMINUS, NOT),
      )
 
     
@@ -135,6 +136,34 @@ class IntelvishParser(Parser):
     @_('expr TIMES expr')
     def expr(self, p):
         return IntelvishASTExprMul(p.expr0, p.expr1)
+        
+    @_('expr LT expr')
+    def expr(self, p):
+        return IntelvishASTExprLT(p.expr0, p.expr1)
+        
+    @_('expr GT expr')
+    def expr(self, p):
+        return IntelvishASTExprLT(p.expr1, p.expr0)
+        
+    @_('expr LE expr')
+    def expr(self, p):
+        return IntelvishASTExprNot(IntelvishASTExprLT(p.expr1, p.expr0))
+        
+    @_('expr GE expr')
+    def expr(self, p):
+        return IntelvishASTExprNot(IntelvishASTExprLT(p.expr0, p.expr1))
+        
+    @_('expr EQ expr')
+    def expr(self, p):
+        return IntelvishASTExprEQ(p.expr0, p.expr1)
+        
+    @_('expr NE expr')
+    def expr(self, p):
+        return IntelvishASTExprNot(IntelvishASTExprEQ(p.expr0, p.expr1))
+    
+    @_('NOT expr')
+    def expr(self, p):
+        return IntelvishASTExprNot(p.expr)
         
     @_('"(" expr ")"')
     def expr(self, p):

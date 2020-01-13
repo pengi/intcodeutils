@@ -1,0 +1,29 @@
+file [
+  func func {
+    args:
+    stmts:
+      return
+        expr_add [
+          expr_var c
+          expr_not
+            expr_not
+              expr_not
+                expr_not
+                  expr_lt [
+                    expr_var b
+                    expr_var a
+                  ]
+        ]
+      return
+        expr_add [
+          expr_var c
+          expr_not
+            expr_not
+              expr_mul [
+                expr_not
+                  expr_var a
+                expr_var b
+              ]
+        ]
+  }
+]

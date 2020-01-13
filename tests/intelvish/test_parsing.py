@@ -34,7 +34,9 @@ def test_parsing(testcase):
     parser = IntelvishParser()
     with open(testcase+'.intelvish', 'r') as f:
         ast = parser.parse(lexer.tokenize(f.read()))
-    print(ast)
+
     with open(testcase+'.ast', 'r') as f:
-        expect_ast = f.read()
-    assert expect_ast == str(ast)
+        assert f.read().rstrip() == str(ast).rstrip()
+
+    with open(testcase+'_simple.ast', 'r') as f:
+        assert f.read().rstrip() == str(ast.simplify()).rstrip()
