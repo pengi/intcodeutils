@@ -1,8 +1,14 @@
 from .helper import str_format
 
 class IntelvishASTStmt:
-    def __init__(self, parts):
-        self.parts = parts
+    pass
+
+class IntelvishASTStmtReturn(IntelvishASTStmt):
+    def __init__(self, expr):
+        self.expr = expr
     
     def __str__(self):
-        return str_format('stmt', None, self.parts)
+        return str_format('return', None, self.expr)
+    
+    def simplify(self):
+        return IntelvishASTStmtReturn(self.expr.simplify())

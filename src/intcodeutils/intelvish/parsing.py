@@ -111,7 +111,7 @@ class IntelvishParser(Parser):
         
     @_('RETURN expr ";"')
     def stmt(self, p):
-        return IntelvishASTStmt(['return', p.expr])
+        return IntelvishASTStmtReturn(p.expr)
         
     
     # Expression

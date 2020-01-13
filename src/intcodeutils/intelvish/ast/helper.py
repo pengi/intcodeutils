@@ -14,4 +14,7 @@ def str_format(nodetype, name, children = None):
         for item in children:
             outp += '  ' + str(item).replace('\n', '\n  ') + '\n'
         outp += ']'
+    elif children is not None:
+        outp += '\n'
+        outp += '  ' + str(children).replace('\n', '\n  ')
     return outp

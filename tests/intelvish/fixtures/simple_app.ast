@@ -4,8 +4,7 @@ file [
       a
       b
     stmts:
-      stmt [
-        return
+      return
         expr_add [
           expr_add [
             expr_var a
@@ -19,19 +18,16 @@ file [
             expr_const 3
           ]
         ]
-      ]
   }
   func main {
     args:
     stmts:
-      stmt [
-        return
+      return
         expr_call my_func [
           expr_const 7
           expr_neg [
             expr_const 8
           ]
         ]
-      ]
   }
 ]
