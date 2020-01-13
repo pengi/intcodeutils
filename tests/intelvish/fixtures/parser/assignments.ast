@@ -1,0 +1,43 @@
+file [
+  func func {
+    args:
+    stmts:
+      expr
+        expr_assign [
+          expr_var a
+          expr_add [
+            expr_const 12
+            expr_var b
+          ]
+        ]
+      expr
+        expr_assign [
+          expr_var c
+          expr_add [
+            expr_assign [
+              expr_var a
+              expr_add [
+                expr_var b
+                expr_const 2
+              ]
+            ]
+            expr_const 3
+          ]
+        ]
+      expr
+        expr_assign [
+          expr_mem_resolve
+            expr_var x
+          expr_const 12
+        ]
+      expr
+        expr_assign [
+          expr_mem_resolve
+            expr_add [
+              expr_var x
+              expr_const 12
+            ]
+          expr_const 14
+        ]
+  }
+]

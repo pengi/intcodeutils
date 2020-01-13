@@ -1,10 +1,12 @@
 import pytest
 from intcodeutils.intelvish import IntelvishParser, IntelvishLexer, IntelvishError
 
-prefix = 'tests/intelvish/fixtures/'
+prefix = 'tests/intelvish/fixtures/parser/'
 
 success_files = [
     prefix + 'simple_app',
+    prefix + 'negation',
+    prefix + 'assignments'
 ]
 
 def test_lexing():

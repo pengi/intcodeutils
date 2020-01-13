@@ -52,10 +52,11 @@ class IntelvishParser(Parser):
     start = 'elf'
     
     precedence = (
-          ('nonassoc', LE, LT, GE, GT, NE, EQ),
+          ('right', ASSIGN),
+          ('left', LE, LT, GE, GT, NE, EQ),
           ('left', PLUS, MINUS),
           ('left', TIMES),
-          ('right', UMINUS, NOT),
+          ('right', UMINUS, NOT, MEMRESOLVE),
      )
 
     
@@ -88,10 +89,6 @@ class IntelvishParser(Parser):
     @_('args "," arg')
     def args(self, p):
         return p.args + [p.arg]
-    
-    @_('NAME')
-    def stmt(self, p):
-        return None
 
     @_('DEF NAME "(" args ")" "{" stmts "}"')
     def decl(self, p):
@@ -111,12 +108,25 @@ class IntelvishParser(Parser):
     @_('RETURN expr ";"')
     def stmt(self, p):
         return IntelvishASTStmtReturn(p.expr)
+
+    @_('expr ";"')
+    def stmt(self, p):
+        return IntelvishASTStmtExpr(p.expr)
     
     # Variables
 
     @_('NAME')
     def var(self, p):
         return IntelvishASTExprVar(p.NAME)
+
+    @_('TIMES NAME')
+    def var(self, p):
+        return IntelvishASTExprMemResolve(IntelvishASTExprVar(p.NAME))
+
+    # Hardcode memresolve to require (), to resolve shift/reduce error
+    @_('TIMES "(" expr ")" %prec MEMRESOLVE')
+    def var(self, p):
+        return IntelvishASTExprMemResolve(p.expr)
     
     # Expression
 

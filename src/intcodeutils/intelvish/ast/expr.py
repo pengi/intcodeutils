@@ -17,6 +17,17 @@ class IntelvishASTExprVar(IntelvishASTExpr):
         return IntelvishASTExprVar(self.name)
 
 
+class IntelvishASTExprMemResolve(IntelvishASTExpr):
+    def __init__(self, expr):
+        self.expr = expr
+
+    def __str__(self):
+        return str_format('expr_mem_resolve', None, self.expr)
+
+    def simplify(self):
+        return IntelvishASTExprMemResolve(self.expr.simplify())
+
+
 class IntelvishASTExprConstant(IntelvishASTExpr):
     def __init__(self, value):
         self.value = value
