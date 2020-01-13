@@ -1,18 +1,57 @@
 from .helper import str_format
 
 class IntelvishASTExpr:
-    def __init__(self, parts):
-        self.parts = parts
-    
-    def __str__(self):
-        return str_format('expr', None, self.parts)
+    pass
 
-class IntelvishASTFile:
-    def __init__(self):
-        self.decls = []
-    
-    def add_decl(self, decl):
-        self.decls.append(decl)
+class IntelvishASTExprVar(IntelvishASTExpr):
+    def __init__(self, name):
+        self.name = name
     
     def __str__(self):
-        return str_format('file', None, self.decls)
+        return str_format('expr_var', self.name);
+
+class IntelvishASTExprConstant(IntelvishASTExpr):
+    def __init__(self, value):
+        self.value = value
+    
+    def __str__(self):
+        return str_format('expr_const', str(self.value));
+
+class IntelvishASTExprAdd(IntelvishASTExpr):
+    def __init__(self, lhs, rhs):
+        self.lhs = lhs
+        self.rhs = rhs
+    
+    def __str__(self):
+        return str_format('expr_add', None, [self.lhs, self.rhs]);
+
+class IntelvishASTExprSub(IntelvishASTExpr):
+    def __init__(self, lhs, rhs):
+        self.lhs = lhs
+        self.rhs = rhs
+    
+    def __str__(self):
+        return str_format('expr_sub', None, [self.lhs, self.rhs]);
+
+class IntelvishASTExprMul(IntelvishASTExpr):
+    def __init__(self, lhs, rhs):
+        self.lhs = lhs
+        self.rhs = rhs
+    
+    def __str__(self):
+        return str_format('expr_mul', None, [self.lhs, self.rhs]);
+
+class IntelvishASTExprNeg(IntelvishASTExpr):
+    def __init__(self, expr):
+        self.expr = expr
+    
+    def __str__(self):
+        return str_format('expr_neg', None, [self.expr]);
+
+class IntelvishASTExprCall(IntelvishASTExpr):
+    def __init__(self, name, args):
+        self.name = name
+        self.args = args
+    
+    def __str__(self):
+        return str_format('expr_call', self.name, self.args);

@@ -6,35 +6,17 @@ file [
     stmts:
       stmt [
         return
-        expr [
-          expr [
-            expr [
-              a
-            ]
-            +
-            expr [
-              expr [
-                12
-              ]
-              *
-              expr [
-                b
-              ]
+        expr_add [
+          expr_add [
+            expr_var a
+            expr_mul [
+              expr_const 12
+              expr_var b
             ]
           ]
-          +
-          expr [
-            (
-            expr [
-              expr [
-                7
-              ]
-              -
-              expr [
-                3
-              ]
-            ]
-            )
+          expr_sub [
+            expr_const 7
+            expr_const 3
           ]
         ]
       ]
@@ -44,9 +26,11 @@ file [
     stmts:
       stmt [
         return
-        expr [
-          func
-          my_func
+        expr_call my_func [
+          expr_const 7
+          expr_neg [
+            expr_const 8
+          ]
         ]
       ]
   }

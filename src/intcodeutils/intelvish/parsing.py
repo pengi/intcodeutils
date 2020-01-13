@@ -118,31 +118,31 @@ class IntelvishParser(Parser):
     
     @_('NAME')
     def expr(self, p):
-        return IntelvishASTExpr([p.NAME])
+        return IntelvishASTExprVar(p.NAME)
         
     @_('NUMBER')
     def expr(self, p):
-        return IntelvishASTExpr([p.NUMBER])
+        return IntelvishASTExprConstant(p.NUMBER)
         
     @_('expr PLUS expr')
     def expr(self, p):
-        return IntelvishASTExpr([p.expr0, "+", p.expr1])
+        return IntelvishASTExprAdd(p.expr0, p.expr1)
         
     @_('expr MINUS expr')
     def expr(self, p):
-        return IntelvishASTExpr([p.expr0, "-", p.expr1])
+        return IntelvishASTExprSub(p.expr0, p.expr1)
         
     @_('expr TIMES expr')
     def expr(self, p):
-        return IntelvishASTExpr([p.expr0, "*", p.expr1])
+        return IntelvishASTExprMul(p.expr0, p.expr1)
         
     @_('"(" expr ")"')
     def expr(self, p):
-        return IntelvishASTExpr(["(", p.expr, ")"])
+        return p.expr
     
     @_('MINUS expr %prec UMINUS')
     def expr(self, p):
-        return IntelvishASTExpr(["-", p.expr])
+        return IntelvishASTExprNeg(p.expr)
         
     @_('')
     def exprs(self, p):
@@ -158,4 +158,4 @@ class IntelvishParser(Parser):
         
     @_('NAME "(" exprs ")"')
     def expr(self, p):
-        return IntelvishASTExpr(["func", p.NAME])
+        return IntelvishASTExprCall(p.NAME, p.exprs)

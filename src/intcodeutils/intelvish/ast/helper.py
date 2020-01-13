@@ -1,4 +1,4 @@
-def str_format(nodetype, name, children):
+def str_format(nodetype, name, children = None):
     outp = nodetype;
     if name is not None:
         outp += ' ' + name
