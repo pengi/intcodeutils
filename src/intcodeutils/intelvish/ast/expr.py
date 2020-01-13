@@ -36,7 +36,11 @@ class IntelvishASTExprAdd(IntelvishASTExpr):
         return str_format('expr_add', None, [self.lhs, self.rhs])
 
     def simplify(self):
-        return IntelvishASTExprAdd(self.lhs.simplify(), self.rhs.simplify())
+        lhs = self.lhs.simplify()
+        rhs = self.rhs.simplify()
+        if type(lhs) == IntelvishASTExprConstant and type(rhs) == IntelvishASTExprConstant:
+            return IntelvishASTExprConstant(lhs.value + rhs.value)
+        return IntelvishASTExprAdd(lhs, rhs)
 
 
 class IntelvishASTExprSub(IntelvishASTExpr):
@@ -48,7 +52,11 @@ class IntelvishASTExprSub(IntelvishASTExpr):
         return str_format('expr_sub', None, [self.lhs, self.rhs])
 
     def simplify(self):
-        return IntelvishASTExprSub(self.lhs.simplify(), self.rhs.simplify())
+        lhs = self.lhs.simplify()
+        rhs = self.rhs.simplify()
+        if type(lhs) == IntelvishASTExprConstant and type(rhs) == IntelvishASTExprConstant:
+            return IntelvishASTExprConstant(lhs.value - rhs.value)
+        return IntelvishASTExprSub(lhs, rhs)
 
 
 class IntelvishASTExprMul(IntelvishASTExpr):
@@ -60,7 +68,11 @@ class IntelvishASTExprMul(IntelvishASTExpr):
         return str_format('expr_mul', None, [self.lhs, self.rhs])
 
     def simplify(self):
-        return IntelvishASTExprMul(self.lhs.simplify(), self.rhs.simplify())
+        lhs = self.lhs.simplify()
+        rhs = self.rhs.simplify()
+        if type(lhs) == IntelvishASTExprConstant and type(rhs) == IntelvishASTExprConstant:
+            return IntelvishASTExprConstant(lhs.value * rhs.value)
+        return IntelvishASTExprMul(lhs, rhs)
 
 
 class IntelvishASTExprNeg(IntelvishASTExpr):
@@ -71,6 +83,8 @@ class IntelvishASTExprNeg(IntelvishASTExpr):
         return str_format('expr_neg', None, [self.expr])
 
     def simplify(self):
+        if type(self.expr) == IntelvishASTExprConstant:
+            return IntelvishASTExprConstant(-self.expr.value)
         return IntelvishASTExprNeg(self.expr.simplify())
 
 
