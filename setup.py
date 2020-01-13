@@ -13,7 +13,8 @@ setup(
         'console_scripts': [
             'intcode-asm = intcodeutils.exec.asm.main:main',
             'intcode-ld = intcodeutils.exec.ld.main:main',
-            'intcode-objcopy = intcodeutils.exec.objcopy.main:main'
+            'intcode-objcopy = intcodeutils.exec.objcopy.main:main',
+            'intelvish-ast = intcodeutils.intelvish.exec.ast:main'
         ]
     },
 
