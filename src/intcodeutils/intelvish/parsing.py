@@ -7,8 +7,8 @@ class IntelvishError(Exception):
 
 
 class IntelvishLexer(Lexer):
-    tokens = {NAME, DEF, RETURN, NUMBER, PLUSPLUS, PLUS, MINUS,
-              TIMES, DIVIDE, EQ, ASSIGN, LE, LT, GE, GT, NE, NOT}
+    tokens = {NAME, DEF, RETURN, NUMBER, PLUS, MINUS,
+              TIMES, EQ, ASSIGN, LE, LT, GE, GT, NE, NOT}
     ignore = r' \t'
     literals = {'(', ')', '{', '}', ';', ','}
 
@@ -31,11 +31,9 @@ class IntelvishLexer(Lexer):
     NAME['return'] = RETURN
 
     # Regular expression rules for tokens
-    PLUSPLUS = r'\+\+'
     PLUS = r'\+'
     MINUS = r'-'
     TIMES = r'\*'
-    DIVIDE = r'/'
     EQ = r'=='
     ASSIGN = r'='
     NOT = r'!'
@@ -56,7 +54,7 @@ class IntelvishParser(Parser):
     precedence = (
           ('nonassoc', LE, LT, GE, GT, NE, EQ),
           ('left', PLUS, MINUS),
-          ('left', TIMES, DIVIDE),
+          ('left', TIMES),
           ('right', UMINUS, NOT),
      )
 
@@ -113,13 +111,22 @@ class IntelvishParser(Parser):
     @_('RETURN expr ";"')
     def stmt(self, p):
         return IntelvishASTStmtReturn(p.expr)
-        
+    
+    # Variables
+
+    @_('NAME')
+    def var(self, p):
+        return IntelvishASTExprVar(p.NAME)
     
     # Expression
-    
-    @_('NAME')
+
+    @_('var ASSIGN expr')
     def expr(self, p):
-        return IntelvishASTExprVar(p.NAME)
+        return IntelvishASTExprAssign(p.var, p.expr)
+    
+    @_('var')
+    def expr(self, p):
+        return p.var
         
     @_('NUMBER')
     def expr(self, p):

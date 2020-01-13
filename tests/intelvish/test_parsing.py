@@ -10,13 +10,13 @@ success_files = [
 def test_lexing():
     input = """
     def func() {
-        i++;
+        i;
         stuff = kalle - pelle; // Comment
         return 12;
     }
     """
     expect = [
-        'DEF', 'NAME', '(', ')', '{', 'NAME', 'PLUSPLUS', ';', 'NAME',
+        'DEF', 'NAME', '(', ')', '{', 'NAME', ';', 'NAME',
         'ASSIGN', 'NAME', 'MINUS', 'NAME', ';', 'RETURN', 'NUMBER', ';', '}'
     ]
 

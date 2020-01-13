@@ -153,3 +153,14 @@ class IntelvishASTExprCall(IntelvishASTExpr):
 
     def simplify(self):
         return IntelvishASTExprCall(self.name, [arg.simplify() for arg in self.args])
+
+class IntelvishASTExprAssign(IntelvishASTExpr):
+    def __init__(self, dst, expr):
+        self.dst = dst
+        self.expr = expr
+
+    def __str__(self):
+        return str_format('expr_assign', None, [self.dst, self.expr])
+
+    def simplify(self):
+        return IntelvishASTExprAssign(self.dst.simplify(), self.expr.simplify())
