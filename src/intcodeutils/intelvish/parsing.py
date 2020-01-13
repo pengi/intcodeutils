@@ -7,7 +7,7 @@ class IntelvishError(Exception):
 
 
 class IntelvishLexer(Lexer):
-    tokens = {NAME, DEF, RETURN, NUMBER, PLUS, MINUS,
+    tokens = {NAME, DEF, IF, ELSE, WHILE, RETURN, NUMBER, PLUS, MINUS,
               TIMES, EQ, ASSIGN, LE, LT, GE, GT, NE, NOT}
     ignore = r' \t'
     literals = {'(', ')', '{', '}', ';', ','}
@@ -29,6 +29,10 @@ class IntelvishLexer(Lexer):
 
     NAME['def'] = DEF
     NAME['return'] = RETURN
+    NAME['if'] = IF
+    NAME['else'] = ELSE
+    NAME['while'] = WHILE
+    
 
     # Regular expression rules for tokens
     PLUS = r'\+'
@@ -112,6 +116,18 @@ class IntelvishParser(Parser):
     @_('expr ";"')
     def stmt(self, p):
         return IntelvishASTStmtExpr(p.expr)
+    
+    @_('WHILE "(" expr ")" "{" stmts "}"')
+    def stmt(self, p):
+        return IntelvishASTStmtWhile(p.expr, p.stmts)
+    
+    @_('IF "(" expr ")" "{" stmts "}"')
+    def stmt(self, p):
+        return IntelvishASTStmtIf(p.expr, p.stmts)
+    
+    @_('IF "(" expr ")" "{" stmts "}" ELSE "{" stmts "}"')
+    def stmt(self, p):
+        return IntelvishASTStmtIf(p.expr, p.stmts0, p.stmts1)
     
     # Variables
 

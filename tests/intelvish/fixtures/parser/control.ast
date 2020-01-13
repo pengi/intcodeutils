@@ -1,0 +1,30 @@
+file [
+  func stuff {
+    args: [
+    ]
+    stmts: [
+      if {
+        condition: expr_const 1
+        if_true: [
+          while {
+            condition: expr_const 1
+            statments: [
+              stmt_expr expr_assign [
+                expr_var a
+                expr_var b
+              ]
+            ]
+          }
+        ]
+        if_false: None
+      }
+      if {
+        condition: expr_const 2
+        if_true: [
+        ]
+        if_false: [
+        ]
+      }
+    ]
+  }
+]

@@ -1,28 +1,30 @@
 file [
   func my_func {
-    args:
+    args: [
       a
       b
-    stmts:
-      return
+    ]
+    stmts: [
+      return expr_add [
         expr_add [
-          expr_add [
-            expr_var a
-            expr_mul [
-              expr_const 12
-              expr_var b
-            ]
+          expr_var a
+          expr_mul [
+            expr_const 12
+            expr_var b
           ]
-          expr_const 4
         ]
+        expr_const 4
+      ]
+    ]
   }
   func main {
-    args:
-    stmts:
-      return
-        expr_call my_func [
-          expr_const 7
-          expr_const -8
-        ]
+    args: [
+    ]
+    stmts: [
+      return expr_call my_func [
+        expr_const 7
+        expr_const -8
+      ]
+    ]
   }
 ]

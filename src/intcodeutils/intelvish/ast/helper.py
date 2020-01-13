@@ -1,20 +1,23 @@
+def _format(value):
+    outp = ''
+    if type(value) == dict:
+        outp += '{\n'
+        for name, item in value.items():
+            outp += '  ' + name + ': ' + _format(item).replace('\n', '\n  ') + '\n'
+        outp += '}'
+    elif type(value) == list:
+        outp += '[\n'
+        for item in value:
+            outp += '  ' + _format(item).replace('\n', '\n  ') + '\n'
+        outp += ']'
+    else:
+        outp += str(value)
+    return outp
+
 def str_format(nodetype, name, children = None):
     outp = nodetype;
     if name is not None:
         outp += ' ' + name
-    if type(children) == dict:
-        outp += ' {\n'
-        for name, items in children.items():
-            outp += '  ' + name + ':\n'
-            for item in items:
-                outp += '    ' + str(item).replace('\n', '\n    ') + '\n'
-        outp += '}'
-    elif type(children) == list:
-        outp += ' [\n'
-        for item in children:
-            outp += '  ' + str(item).replace('\n', '\n  ') + '\n'
-        outp += ']'
-    elif children is not None:
-        outp += '\n'
-        outp += '  ' + str(children).replace('\n', '\n  ')
+    if children is not None:
+        outp += ' ' + _format(children)
     return outp
