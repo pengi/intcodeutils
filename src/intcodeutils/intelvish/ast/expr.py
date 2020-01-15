@@ -1,6 +1,5 @@
 from .helper import str_format
 
-
 class ASTExpr:
     def return_bool(self):
         return False
@@ -16,6 +15,9 @@ class ASTExprVar(ASTExpr):
     def simplify(self):
         return ASTExprVar(self.name)
 
+    def visit(self, visitor, *args, **kvargs):
+        return visitor.visit_expr_var(self, *args, **kvargs)
+
 
 class ASTExprMemResolve(ASTExpr):
     def __init__(self, expr):
@@ -27,6 +29,9 @@ class ASTExprMemResolve(ASTExpr):
     def simplify(self):
         return ASTExprMemResolve(self.expr.simplify())
 
+    def visit(self, visitor, *args, **kvargs):
+        return visitor.visit_expr_mem_resolve(self, *args, **kvargs)
+
 
 class ASTExprConstant(ASTExpr):
     def __init__(self, value):
@@ -37,6 +42,9 @@ class ASTExprConstant(ASTExpr):
 
     def simplify(self):
         return ASTExprConstant(self.value)
+
+    def visit(self, visitor, *args, **kvargs):
+        return visitor.visit_expr_constant(self, *args, **kvargs)
 
 
 class ASTExprAdd(ASTExpr):
@@ -54,6 +62,9 @@ class ASTExprAdd(ASTExpr):
             return ASTExprConstant(lhs.value + rhs.value)
         return ASTExprAdd(lhs, rhs)
 
+    def visit(self, visitor, *args, **kvargs):
+        return visitor.visit_expr_add(self, *args, **kvargs)
+
 
 class ASTExprSub(ASTExpr):
     def __init__(self, lhs, rhs):
@@ -69,6 +80,9 @@ class ASTExprSub(ASTExpr):
         if type(lhs) == ASTExprConstant and type(rhs) == ASTExprConstant:
             return ASTExprConstant(lhs.value - rhs.value)
         return ASTExprSub(lhs, rhs)
+
+    def visit(self, visitor, *args, **kvargs):
+        return visitor.visit_expr_sub(self, *args, **kvargs)
 
 
 class ASTExprMul(ASTExpr):
@@ -89,6 +103,9 @@ class ASTExprMul(ASTExpr):
             return ASTExprConstant(lhs.value * rhs.value)
         return ASTExprMul(lhs, rhs)
 
+    def visit(self, visitor, *args, **kvargs):
+        return visitor.visit_expr_mul(self, *args, **kvargs)
+
 
 class ASTExprLT(ASTExpr):
     def __init__(self, lhs, rhs):
@@ -97,7 +114,7 @@ class ASTExprLT(ASTExpr):
 
     def __str__(self):
         return str_format('expr_lt', None, [self.lhs, self.rhs])
-    
+
     def return_bool(self):
         return True
 
@@ -105,6 +122,9 @@ class ASTExprLT(ASTExpr):
         lhs = self.lhs.simplify()
         rhs = self.rhs.simplify()
         return ASTExprLT(lhs, rhs)
+
+    def visit(self, visitor, *args, **kvargs):
+        return visitor.visit_expr_lt(self, *args, **kvargs)
 
 
 class ASTExprEQ(ASTExpr):
@@ -114,7 +134,7 @@ class ASTExprEQ(ASTExpr):
 
     def __str__(self):
         return str_format('expr_eq', None, [self.lhs, self.rhs])
-    
+
     def return_bool(self):
         return True
 
@@ -123,6 +143,9 @@ class ASTExprEQ(ASTExpr):
         rhs = self.rhs.simplify()
         return ASTExprEQ(lhs, rhs)
 
+    def visit(self, visitor, *args, **kvargs):
+        return visitor.visit_expr_eq(self, *args, **kvargs)
+
 
 class ASTExprNot(ASTExpr):
     def __init__(self, expr):
@@ -130,7 +153,7 @@ class ASTExprNot(ASTExpr):
 
     def __str__(self):
         return str_format('expr_not', None, self.expr)
-    
+
     def return_bool(self):
         return True
 
@@ -139,6 +162,9 @@ class ASTExprNot(ASTExpr):
         if type(expr) == ASTExprNot and expr.expr.return_bool():
             return expr.expr
         return ASTExprNot(expr)
+
+    def visit(self, visitor, *args, **kvargs):
+        return visitor.visit_expr_not(self, *args, **kvargs)
 
 
 class ASTExprNeg(ASTExpr):
@@ -153,6 +179,9 @@ class ASTExprNeg(ASTExpr):
             return ASTExprConstant(-self.expr.value)
         return ASTExprNeg(self.expr.simplify())
 
+    def visit(self, visitor, *args, **kvargs):
+        return visitor.visit_expr_neg(self, *args, **kvargs)
+
 
 class ASTExprCall(ASTExpr):
     def __init__(self, name, args):
@@ -165,6 +194,10 @@ class ASTExprCall(ASTExpr):
     def simplify(self):
         return ASTExprCall(self.name, [arg.simplify() for arg in self.args])
 
+    def visit(self, visitor, *args, **kvargs):
+        return visitor.visit_expr_call(self, *args, **kvargs)
+
+
 class ASTExprAssign(ASTExpr):
     def __init__(self, dst, expr):
         self.dst = dst
@@ -175,3 +208,6 @@ class ASTExprAssign(ASTExpr):
 
     def simplify(self):
         return ASTExprAssign(self.dst.simplify(), self.expr.simplify())
+
+    def visit(self, visitor, *args, **kvargs):
+        return visitor.visit_expr_assign(self, *args, **kvargs)

@@ -1,7 +1,8 @@
 from .helper import str_format
 
 class ASTStmt:
-    pass
+    def linearize(self, varmap):
+        return []
 
 class ASTStmtReturn(ASTStmt):
     def __init__(self, expr):
@@ -12,6 +13,9 @@ class ASTStmtReturn(ASTStmt):
     
     def simplify(self):
         return ASTStmtReturn(self.expr.simplify())
+        
+    def visit(self, visitor, *args, **kvargs):
+        return visitor.visit_stmt_return(self, *args, **kvargs)
 
 
 class ASTStmtExpr(ASTStmt):
@@ -23,6 +27,9 @@ class ASTStmtExpr(ASTStmt):
     
     def simplify(self):
         return ASTStmtExpr(self.expr.simplify())
+        
+    def visit(self, visitor, *args, **kvargs):
+        return visitor.visit_stmt_expr(self, *args, **kvargs)
 
 class ASTStmtWhile(ASTStmt):
     def __init__(self, expr, stmts):
@@ -37,6 +44,13 @@ class ASTStmtWhile(ASTStmt):
     
     def simplify(self):
         return ASTStmtWhile(self.expr.simplify(), [stmt.simplify() for stmt in self.stmts])
+    
+    def linearize(self, scope):
+        # TODO: Implement
+        return []
+        
+    def visit(self, visitor, *args, **kvargs):
+        return visitor.visit_stmt_while(self, *args, **kvargs)
 
 class ASTStmtIf(ASTStmt):
     def __init__(self, expr, if_true, if_false = None):
@@ -58,6 +72,9 @@ class ASTStmtIf(ASTStmt):
         if self.if_false is not None:
             if_false = [stmt.simplify() for stmt in self.if_false]
         return ASTStmtIf(expr, if_true, if_false)
+        
+    def visit(self, visitor, *args, **kvargs):
+        return visitor.visit_stmt_if(self, *args, **kvargs)
 
 class ASTStmtVar(ASTStmt):
     def __init__(self, name):
@@ -68,3 +85,6 @@ class ASTStmtVar(ASTStmt):
     
     def simplify(self):
         return ASTStmtVar(self.name)
+        
+    def visit(self, visitor, *args, **kvargs):
+        return visitor.visit_stmt_var(self, *args, **kvargs)

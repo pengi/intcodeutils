@@ -1,5 +1,5 @@
 from .helper import str_format
-
+from .error import ASTError
 
 class ASTDecl:
     def __init__(self, name):
@@ -18,15 +18,22 @@ class ASTDeclFunc(ASTDecl):
     def simplify(self):
         return ASTDeclFunc(self.name, self.args[:], [stmt.simplify() for stmt in self.stmts])
 
+    def visit(self, visitor, *args, **kvargs):
+        return visitor.visit_decl_func(self, *args, **kvargs)
+
+
 class ASTDeclVar(ASTDecl):
     def __init__(self, name):
         super(ASTDeclVar, self).__init__(name)
-    
+
     def __str__(self):
         return str_format('decl_var', self.name)
-    
+
     def simplify(self):
         return ASTDeclVar(self.name)
+
+    def visit(self, visitor, *args, **kvargs):
+        return visitor.visit_decl_func(self, *args, **kvargs)
 
 
 class ASTFile:
@@ -44,3 +51,6 @@ class ASTFile:
         for decl in self.decls:
             out.decls.append(decl.simplify())
         return out
+
+    def visit(self, visitor, *args, **kvargs):
+        return visitor.visit_file(self, *args, **kvargs)
