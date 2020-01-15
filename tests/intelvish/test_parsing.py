@@ -1,5 +1,5 @@
 import pytest
-from intcodeutils.intelvish import IntelvishParser, IntelvishLexer, IntelvishError
+from intcodeutils.intelvish import IlvsParser, IlvsLexer, IlvsError
 
 prefix = 'tests/intelvish/fixtures/parser/'
 
@@ -22,7 +22,7 @@ def test_lexing():
         'ASSIGN', 'NAME', 'MINUS', 'NAME', ';', 'RETURN', 'NUMBER', ';', '}'
     ]
 
-    lexer = IntelvishLexer()
+    lexer = IlvsLexer()
     count = 0
     for lex_tok, exp_tok in zip(lexer.tokenize(input), expect):
         assert lex_tok.type == exp_tok
@@ -32,8 +32,8 @@ def test_lexing():
 
 @pytest.mark.parametrize("testcase", success_files)
 def test_parsing(testcase):
-    lexer = IntelvishLexer()
-    parser = IntelvishParser()
+    lexer = IlvsLexer()
+    parser = IlvsParser()
     with open(testcase+'.intelvish', 'r') as f:
         ast = parser.parse(lexer.tokenize(f.read()))
 

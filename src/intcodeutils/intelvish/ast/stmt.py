@@ -1,9 +1,9 @@
 from .helper import str_format
 
-class IntelvishASTStmt:
+class ASTStmt:
     pass
 
-class IntelvishASTStmtReturn(IntelvishASTStmt):
+class ASTStmtReturn(ASTStmt):
     def __init__(self, expr):
         self.expr = expr
     
@@ -11,10 +11,10 @@ class IntelvishASTStmtReturn(IntelvishASTStmt):
         return str_format('return', None, self.expr)
     
     def simplify(self):
-        return IntelvishASTStmtReturn(self.expr.simplify())
+        return ASTStmtReturn(self.expr.simplify())
 
 
-class IntelvishASTStmtExpr(IntelvishASTStmt):
+class ASTStmtExpr(ASTStmt):
     def __init__(self, expr):
         self.expr = expr
     
@@ -22,9 +22,9 @@ class IntelvishASTStmtExpr(IntelvishASTStmt):
         return str_format('stmt_expr', None, self.expr)
     
     def simplify(self):
-        return IntelvishASTStmtExpr(self.expr.simplify())
+        return ASTStmtExpr(self.expr.simplify())
 
-class IntelvishASTStmtWhile(IntelvishASTStmt):
+class ASTStmtWhile(ASTStmt):
     def __init__(self, expr, stmts):
         self.expr = expr
         self.stmts = stmts
@@ -36,9 +36,9 @@ class IntelvishASTStmtWhile(IntelvishASTStmt):
         })
     
     def simplify(self):
-        return IntelvishASTStmtWhile(self.expr.simplify(), [stmt.simplify() for stmt in self.stmts])
+        return ASTStmtWhile(self.expr.simplify(), [stmt.simplify() for stmt in self.stmts])
 
-class IntelvishASTStmtIf(IntelvishASTStmt):
+class ASTStmtIf(ASTStmt):
     def __init__(self, expr, if_true, if_false = None):
         self.expr = expr
         self.if_true = if_true
@@ -57,9 +57,9 @@ class IntelvishASTStmtIf(IntelvishASTStmt):
         if_false = None
         if self.if_false is not None:
             if_false = [stmt.simplify() for stmt in self.if_false]
-        return IntelvishASTStmtIf(expr, if_true, if_false)
+        return ASTStmtIf(expr, if_true, if_false)
 
-class IntelvishASTStmtVar(IntelvishASTStmt):
+class ASTStmtVar(ASTStmt):
     def __init__(self, name):
         self.name = name
     
@@ -67,4 +67,4 @@ class IntelvishASTStmtVar(IntelvishASTStmt):
         return str_format('stmt_var', self.name)
     
     def simplify(self):
-        return IntelvishASTStmtVar(self.name)
+        return ASTStmtVar(self.name)

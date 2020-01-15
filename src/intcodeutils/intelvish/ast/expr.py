@@ -1,12 +1,12 @@
 from .helper import str_format
 
 
-class IntelvishASTExpr:
+class ASTExpr:
     def return_bool(self):
         return False
 
 
-class IntelvishASTExprVar(IntelvishASTExpr):
+class ASTExprVar(ASTExpr):
     def __init__(self, name):
         self.name = name
 
@@ -14,10 +14,10 @@ class IntelvishASTExprVar(IntelvishASTExpr):
         return str_format('expr_var', self.name)
 
     def simplify(self):
-        return IntelvishASTExprVar(self.name)
+        return ASTExprVar(self.name)
 
 
-class IntelvishASTExprMemResolve(IntelvishASTExpr):
+class ASTExprMemResolve(ASTExpr):
     def __init__(self, expr):
         self.expr = expr
 
@@ -25,10 +25,10 @@ class IntelvishASTExprMemResolve(IntelvishASTExpr):
         return str_format('expr_mem_resolve', None, self.expr)
 
     def simplify(self):
-        return IntelvishASTExprMemResolve(self.expr.simplify())
+        return ASTExprMemResolve(self.expr.simplify())
 
 
-class IntelvishASTExprConstant(IntelvishASTExpr):
+class ASTExprConstant(ASTExpr):
     def __init__(self, value):
         self.value = value
 
@@ -36,10 +36,10 @@ class IntelvishASTExprConstant(IntelvishASTExpr):
         return str_format('expr_const', str(self.value))
 
     def simplify(self):
-        return IntelvishASTExprConstant(self.value)
+        return ASTExprConstant(self.value)
 
 
-class IntelvishASTExprAdd(IntelvishASTExpr):
+class ASTExprAdd(ASTExpr):
     def __init__(self, lhs, rhs):
         self.lhs = lhs
         self.rhs = rhs
@@ -50,12 +50,12 @@ class IntelvishASTExprAdd(IntelvishASTExpr):
     def simplify(self):
         lhs = self.lhs.simplify()
         rhs = self.rhs.simplify()
-        if type(lhs) == IntelvishASTExprConstant and type(rhs) == IntelvishASTExprConstant:
-            return IntelvishASTExprConstant(lhs.value + rhs.value)
-        return IntelvishASTExprAdd(lhs, rhs)
+        if type(lhs) == ASTExprConstant and type(rhs) == ASTExprConstant:
+            return ASTExprConstant(lhs.value + rhs.value)
+        return ASTExprAdd(lhs, rhs)
 
 
-class IntelvishASTExprSub(IntelvishASTExpr):
+class ASTExprSub(ASTExpr):
     def __init__(self, lhs, rhs):
         self.lhs = lhs
         self.rhs = rhs
@@ -66,12 +66,12 @@ class IntelvishASTExprSub(IntelvishASTExpr):
     def simplify(self):
         lhs = self.lhs.simplify()
         rhs = self.rhs.simplify()
-        if type(lhs) == IntelvishASTExprConstant and type(rhs) == IntelvishASTExprConstant:
-            return IntelvishASTExprConstant(lhs.value - rhs.value)
-        return IntelvishASTExprSub(lhs, rhs)
+        if type(lhs) == ASTExprConstant and type(rhs) == ASTExprConstant:
+            return ASTExprConstant(lhs.value - rhs.value)
+        return ASTExprSub(lhs, rhs)
 
 
-class IntelvishASTExprMul(IntelvishASTExpr):
+class ASTExprMul(ASTExpr):
     def __init__(self, lhs, rhs):
         self.lhs = lhs
         self.rhs = rhs
@@ -85,12 +85,12 @@ class IntelvishASTExprMul(IntelvishASTExpr):
     def simplify(self):
         lhs = self.lhs.simplify()
         rhs = self.rhs.simplify()
-        if type(lhs) == IntelvishASTExprConstant and type(rhs) == IntelvishASTExprConstant:
-            return IntelvishASTExprConstant(lhs.value * rhs.value)
-        return IntelvishASTExprMul(lhs, rhs)
+        if type(lhs) == ASTExprConstant and type(rhs) == ASTExprConstant:
+            return ASTExprConstant(lhs.value * rhs.value)
+        return ASTExprMul(lhs, rhs)
 
 
-class IntelvishASTExprLT(IntelvishASTExpr):
+class ASTExprLT(ASTExpr):
     def __init__(self, lhs, rhs):
         self.lhs = lhs
         self.rhs = rhs
@@ -104,10 +104,10 @@ class IntelvishASTExprLT(IntelvishASTExpr):
     def simplify(self):
         lhs = self.lhs.simplify()
         rhs = self.rhs.simplify()
-        return IntelvishASTExprLT(lhs, rhs)
+        return ASTExprLT(lhs, rhs)
 
 
-class IntelvishASTExprEQ(IntelvishASTExpr):
+class ASTExprEQ(ASTExpr):
     def __init__(self, lhs, rhs):
         self.lhs = lhs
         self.rhs = rhs
@@ -121,10 +121,10 @@ class IntelvishASTExprEQ(IntelvishASTExpr):
     def simplify(self):
         lhs = self.lhs.simplify()
         rhs = self.rhs.simplify()
-        return IntelvishASTExprEQ(lhs, rhs)
+        return ASTExprEQ(lhs, rhs)
 
 
-class IntelvishASTExprNot(IntelvishASTExpr):
+class ASTExprNot(ASTExpr):
     def __init__(self, expr):
         self.expr = expr
 
@@ -136,12 +136,12 @@ class IntelvishASTExprNot(IntelvishASTExpr):
 
     def simplify(self):
         expr = self.expr.simplify()
-        if type(expr) == IntelvishASTExprNot and expr.expr.return_bool():
+        if type(expr) == ASTExprNot and expr.expr.return_bool():
             return expr.expr
-        return IntelvishASTExprNot(expr)
+        return ASTExprNot(expr)
 
 
-class IntelvishASTExprNeg(IntelvishASTExpr):
+class ASTExprNeg(ASTExpr):
     def __init__(self, expr):
         self.expr = expr
 
@@ -149,12 +149,12 @@ class IntelvishASTExprNeg(IntelvishASTExpr):
         return str_format('expr_neg', None, self.expr)
 
     def simplify(self):
-        if type(self.expr) == IntelvishASTExprConstant:
-            return IntelvishASTExprConstant(-self.expr.value)
-        return IntelvishASTExprNeg(self.expr.simplify())
+        if type(self.expr) == ASTExprConstant:
+            return ASTExprConstant(-self.expr.value)
+        return ASTExprNeg(self.expr.simplify())
 
 
-class IntelvishASTExprCall(IntelvishASTExpr):
+class ASTExprCall(ASTExpr):
     def __init__(self, name, args):
         self.name = name
         self.args = args
@@ -163,9 +163,9 @@ class IntelvishASTExprCall(IntelvishASTExpr):
         return str_format('expr_call', self.name, self.args)
 
     def simplify(self):
-        return IntelvishASTExprCall(self.name, [arg.simplify() for arg in self.args])
+        return ASTExprCall(self.name, [arg.simplify() for arg in self.args])
 
-class IntelvishASTExprAssign(IntelvishASTExpr):
+class ASTExprAssign(ASTExpr):
     def __init__(self, dst, expr):
         self.dst = dst
         self.expr = expr
@@ -174,4 +174,4 @@ class IntelvishASTExprAssign(IntelvishASTExpr):
         return str_format('expr_assign', None, [self.dst, self.expr])
 
     def simplify(self):
-        return IntelvishASTExprAssign(self.dst.simplify(), self.expr.simplify())
+        return ASTExprAssign(self.dst.simplify(), self.expr.simplify())

@@ -2,11 +2,11 @@ from sly import Lexer, Parser
 from .ast import *
 
 
-class IntelvishError(Exception):
+class IlvsError(Exception):
     pass
 
 
-class IntelvishLexer(Lexer):
+class IlvsLexer(Lexer):
     tokens = {NAME, DEF, VAR, IF, ELSE, WHILE, RETURN, NUMBER, PLUS, MINUS,
               TIMES, EQ, ASSIGN, LE, LT, GE, GT, NE, NOT}
     ignore = r' \t'
@@ -49,11 +49,11 @@ class IntelvishLexer(Lexer):
     NE = r'!='
 
     def error(self, t):
-        raise IntelvishError("Lexing error " + repr(t))
+        raise IlvsError("Lexing error " + repr(t))
 
 
-class IntelvishParser(Parser):
-    tokens = IntelvishLexer.tokens
+class IlvsParser(Parser):
+    tokens = IlvsLexer.tokens
     start = 'top'
     
     precedence = (
@@ -69,7 +69,7 @@ class IntelvishParser(Parser):
     
     @_('')
     def top(self, p):
-        return IntelvishASTFile()
+        return ASTFile()
 
     @_('top decl')
     def top(self, p):
@@ -100,11 +100,11 @@ class IntelvishParser(Parser):
 
     @_('DEF NAME "(" args ")" "{" stmts "}"')
     def decl(self, p):
-        return IntelvishASTDeclFunc(p.NAME, p.args, p.stmts)
+        return ASTDeclFunc(p.NAME, p.args, p.stmts)
 
     @_('VAR NAME ";"')
     def decl(self, p):
-        return IntelvishASTDeclVar(p.NAME)
+        return ASTDeclVar(p.NAME)
         
         
     # Statements
@@ -119,48 +119,48 @@ class IntelvishParser(Parser):
         
     @_('RETURN expr ";"')
     def stmt(self, p):
-        return IntelvishASTStmtReturn(p.expr)
+        return ASTStmtReturn(p.expr)
 
     @_('expr ";"')
     def stmt(self, p):
-        return IntelvishASTStmtExpr(p.expr)
+        return ASTStmtExpr(p.expr)
     
     @_('WHILE "(" expr ")" "{" stmts "}"')
     def stmt(self, p):
-        return IntelvishASTStmtWhile(p.expr, p.stmts)
+        return ASTStmtWhile(p.expr, p.stmts)
     
     @_('IF "(" expr ")" "{" stmts "}"')
     def stmt(self, p):
-        return IntelvishASTStmtIf(p.expr, p.stmts)
+        return ASTStmtIf(p.expr, p.stmts)
     
     @_('IF "(" expr ")" "{" stmts "}" ELSE "{" stmts "}"')
     def stmt(self, p):
-        return IntelvishASTStmtIf(p.expr, p.stmts0, p.stmts1)
+        return ASTStmtIf(p.expr, p.stmts0, p.stmts1)
 
     @_('VAR NAME ";"')
     def stmt(self, p):
-        return IntelvishASTStmtVar(p.NAME)
+        return ASTStmtVar(p.NAME)
     
     # Variables
 
     @_('NAME')
     def var(self, p):
-        return IntelvishASTExprVar(p.NAME)
+        return ASTExprVar(p.NAME)
 
     @_('TIMES NAME')
     def var(self, p):
-        return IntelvishASTExprMemResolve(IntelvishASTExprVar(p.NAME))
+        return ASTExprMemResolve(ASTExprVar(p.NAME))
 
     # Hardcode memresolve to require (), to resolve shift/reduce error
     @_('TIMES "(" expr ")" %prec MEMRESOLVE')
     def var(self, p):
-        return IntelvishASTExprMemResolve(p.expr)
+        return ASTExprMemResolve(p.expr)
     
     # Expression
 
     @_('var ASSIGN expr')
     def expr(self, p):
-        return IntelvishASTExprAssign(p.var, p.expr)
+        return ASTExprAssign(p.var, p.expr)
     
     @_('var')
     def expr(self, p):
@@ -168,47 +168,47 @@ class IntelvishParser(Parser):
         
     @_('NUMBER')
     def expr(self, p):
-        return IntelvishASTExprConstant(p.NUMBER)
+        return ASTExprConstant(p.NUMBER)
         
     @_('expr PLUS expr')
     def expr(self, p):
-        return IntelvishASTExprAdd(p.expr0, p.expr1)
+        return ASTExprAdd(p.expr0, p.expr1)
         
     @_('expr MINUS expr')
     def expr(self, p):
-        return IntelvishASTExprSub(p.expr0, p.expr1)
+        return ASTExprSub(p.expr0, p.expr1)
         
     @_('expr TIMES expr')
     def expr(self, p):
-        return IntelvishASTExprMul(p.expr0, p.expr1)
+        return ASTExprMul(p.expr0, p.expr1)
         
     @_('expr LT expr')
     def expr(self, p):
-        return IntelvishASTExprLT(p.expr0, p.expr1)
+        return ASTExprLT(p.expr0, p.expr1)
         
     @_('expr GT expr')
     def expr(self, p):
-        return IntelvishASTExprLT(p.expr1, p.expr0)
+        return ASTExprLT(p.expr1, p.expr0)
         
     @_('expr LE expr')
     def expr(self, p):
-        return IntelvishASTExprNot(IntelvishASTExprLT(p.expr1, p.expr0))
+        return ASTExprNot(ASTExprLT(p.expr1, p.expr0))
         
     @_('expr GE expr')
     def expr(self, p):
-        return IntelvishASTExprNot(IntelvishASTExprLT(p.expr0, p.expr1))
+        return ASTExprNot(ASTExprLT(p.expr0, p.expr1))
         
     @_('expr EQ expr')
     def expr(self, p):
-        return IntelvishASTExprEQ(p.expr0, p.expr1)
+        return ASTExprEQ(p.expr0, p.expr1)
         
     @_('expr NE expr')
     def expr(self, p):
-        return IntelvishASTExprNot(IntelvishASTExprEQ(p.expr0, p.expr1))
+        return ASTExprNot(ASTExprEQ(p.expr0, p.expr1))
     
     @_('NOT expr')
     def expr(self, p):
-        return IntelvishASTExprNot(p.expr)
+        return ASTExprNot(p.expr)
         
     @_('"(" expr ")"')
     def expr(self, p):
@@ -216,7 +216,7 @@ class IntelvishParser(Parser):
     
     @_('MINUS expr %prec UMINUS')
     def expr(self, p):
-        return IntelvishASTExprNeg(p.expr)
+        return ASTExprNeg(p.expr)
         
     @_('')
     def exprs(self, p):
@@ -232,4 +232,4 @@ class IntelvishParser(Parser):
         
     @_('NAME "(" exprs ")"')
     def expr(self, p):
-        return IntelvishASTExprCall(p.NAME, p.exprs)
+        return ASTExprCall(p.NAME, p.exprs)

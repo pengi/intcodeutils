@@ -1,1 +1,1 @@
-from .parsing import IntelvishParser, IntelvishLexer, IntelvishError
+from .parsing import IlvsParser, IlvsLexer, IlvsError

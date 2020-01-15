@@ -1,4 +1,4 @@
-from intcodeutils.intelvish import IntelvishParser, IntelvishLexer, IntelvishError
+from intcodeutils.intelvish import IlvsParser, IlvsLexer, IlvsError
 import argparse
 import sys
 
@@ -27,8 +27,8 @@ parser.add_argument(
 def main():
     args = parser.parse_args()
 
-    ilv_lexer = IntelvishLexer()
-    ilv_parser = IntelvishParser()
+    ilv_lexer = IlvsLexer()
+    ilv_parser = IlvsParser()
 
     ast = ilv_parser.parse(ilv_lexer.tokenize(args.intelvish_file.read()))
 
