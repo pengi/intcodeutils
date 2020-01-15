@@ -4,7 +4,7 @@ from intcodeutils.intelvish import IntelvishParser, IntelvishLexer, IntelvishErr
 prefix = 'tests/intelvish/fixtures/'
 
 success_files = [
-    prefix + 'single_func',
+    prefix + 'simple_app',
 ]
 
 def test_lexing():
@@ -33,8 +33,8 @@ def test_parsing(testcase):
     lexer = IntelvishLexer()
     parser = IntelvishParser()
     with open(testcase+'.intelvish', 'r') as f:
-        elf = parser.parse(lexer.tokenize(f.read()))
-    
+        ast = parser.parse(lexer.tokenize(f.read()))
+    print(ast)
     with open(testcase+'.ast', 'r') as f:
         expect_ast = f.read()
-    assert expect_ast == str(elf)
+    assert expect_ast == str(ast)

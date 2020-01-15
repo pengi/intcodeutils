@@ -10,7 +10,7 @@ class IntelvishLexer(Lexer):
     tokens = {NAME, DEF, RETURN, NUMBER, PLUSPLUS, PLUS, MINUS,
               TIMES, DIVIDE, EQ, ASSIGN, LE, LT, GE, GT, NE}
     ignore = r' \t'
-    literals = {'(', ')', '{', '}', ';'}
+    literals = {'(', ')', '{', '}', ';', ','}
 
     ignore_newline = r'\n+'
     def ignore_newline(self, t):
@@ -50,19 +50,112 @@ class IntelvishLexer(Lexer):
 
 class IntelvishParser(Parser):
     tokens = IntelvishLexer.tokens
+    start = 'elf'
+    
+    precedence = (
+          ('nonassoc', LE, LT, GE, GT, NE, EQ),
+          ('left', PLUS, MINUS),
+          ('left', TIMES, DIVIDE),
+          ('right', UMINUS),
+     )
+
+    
+    # Top level
     
     @_('')
     def elf(self, p):
-        print('elf empty')  
         return IntelvishASTFile()
 
     @_('elf decl')
     def elf(self, p):
-        print("elf decl")
         p.elf.add_decl(p.decl)
         return p.elf
+    
+    
+    # Function
+    
+    @_('NAME')
+    def arg(self, p):
+        return p.NAME
+    
+    @_('')
+    def args(self, p):
+        return []
+    
+    @_('arg')
+    def args(self, p):
+        return [p.arg]
+        
+    @_('args "," arg')
+    def args(self, p):
+        return p.args + [p.arg]
+    
+    @_('NAME')
+    def stmt(self, p):
+        return None
 
-    @_('DEF NAME "(" ")" "{" "}"')
+    @_('DEF NAME "(" args ")" "{" stmts "}"')
     def decl(self, p):
-        print("func")
-        return IntelvishASTDeclFunc(p.NAME)
+        return IntelvishASTDeclFunc(p.NAME, p.args, p.stmts)
+        
+        
+    # Statements
+
+    @_('')
+    def stmts(eslf, p):
+        return []
+        
+    @_('stmts stmt')
+    def stmts(self, p):
+        return p.stmts + [p.stmt]
+        
+    @_('RETURN expr ";"')
+    def stmt(self, p):
+        return IntelvishASTStmt(['return', p.expr])
+        
+    
+    # Expression
+    
+    @_('NAME')
+    def expr(self, p):
+        return IntelvishASTExpr([p.NAME])
+        
+    @_('NUMBER')
+    def expr(self, p):
+        return IntelvishASTExpr([p.NUMBER])
+        
+    @_('expr PLUS expr')
+    def expr(self, p):
+        return IntelvishASTExpr([p.expr0, "+", p.expr1])
+        
+    @_('expr MINUS expr')
+    def expr(self, p):
+        return IntelvishASTExpr([p.expr0, "-", p.expr1])
+        
+    @_('expr TIMES expr')
+    def expr(self, p):
+        return IntelvishASTExpr([p.expr0, "*", p.expr1])
+        
+    @_('"(" expr ")"')
+    def expr(self, p):
+        return IntelvishASTExpr(["(", p.expr, ")"])
+    
+    @_('MINUS expr %prec UMINUS')
+    def expr(self, p):
+        return IntelvishASTExpr(["-", p.expr])
+        
+    @_('')
+    def exprs(self, p):
+        return []
+    
+    @_('expr')
+    def exprs(self, p):
+        return [p.expr]
+    
+    @_('exprs "," expr')
+    def exprs(self, p):
+        return p.exprs + [p.expr]
+        
+    @_('NAME "(" exprs ")"')
+    def expr(self, p):
+        return IntelvishASTExpr(["func", p.NAME])

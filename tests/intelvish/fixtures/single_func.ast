@@ -1,5 +1,0 @@
-file {
-  decls:
-  - func my_func {
-    }
-}

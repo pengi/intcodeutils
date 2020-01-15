@@ -1,0 +1,53 @@
+file [
+  func my_func {
+    args:
+      a
+      b
+    stmts:
+      stmt [
+        return
+        expr [
+          expr [
+            expr [
+              a
+            ]
+            +
+            expr [
+              expr [
+                12
+              ]
+              *
+              expr [
+                b
+              ]
+            ]
+          ]
+          +
+          expr [
+            (
+            expr [
+              expr [
+                7
+              ]
+              -
+              expr [
+                3
+              ]
+            ]
+            )
+          ]
+        ]
+      ]
+  }
+  func main {
+    args:
+    stmts:
+      stmt [
+        return
+        expr [
+          func
+          my_func
+        ]
+      ]
+  }
+]

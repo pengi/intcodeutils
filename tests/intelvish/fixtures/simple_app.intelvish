@@ -1,0 +1,9 @@
+// Single simple empty function.
+// Should just be push/pop from stack and a return
+def my_func(a,b) {
+    return a + 12 * b + (7 - 3);
+}
+
+def main() {
+    return my_func(7,-8);
+}

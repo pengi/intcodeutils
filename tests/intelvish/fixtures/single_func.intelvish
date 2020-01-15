@@ -1,4 +1,0 @@
-// Single simple empty function.
-// Should just be push/pop from stack and a return
-def my_func() {
-}
