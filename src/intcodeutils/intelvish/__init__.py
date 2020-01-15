@@ -1,2 +1,2 @@
 from .parsing import IlvsParser, IlvsLexer, IlvsError
-from .abasm import compile_ast
+from .asm import compile_ast

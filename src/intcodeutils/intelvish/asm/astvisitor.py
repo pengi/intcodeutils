@@ -1,17 +1,17 @@
-from .file import AbAsmFile
-from .block import AbAsmFunc
-from .instruction import AbAsmInstrComment, AbAsmInstrNotImplemented, AbAsmInstrAdd, AbAsmInstrMul, AbAsmInstrLt, AbAsmInstrEq, AbAsmInstrLoad, AbAsmInstrJumpIfTrue, AbAsmInstrReturn
+from .file import AsmFile
+from .block import AsmFunc
+from .instruction import AsmInstrComment, AsmInstrNotImplemented, AsmInstrAdd, AsmInstrMul, AsmInstrLt, AsmInstrEq, AsmInstrLoad, AsmInstrJumpIfTrue, AsmInstrReturn
 
 from .var import Scope, VarConst, VarInstrRef
 
 from ..ast import ASTDeclVar, ASTDeclFunc
 
-class AbAsmASTVisitor:
+class AsmASTVisitor:
     def __init__(self):
         pass
 
     def visit_file(self, node):
-        abasm = AbAsmFile()
+        abasm = AsmFile()
         for decl in node.decls:
             if type(decl) is ASTDeclVar:
                 abasm.add_var(decl.visit(self, ))
@@ -29,7 +29,7 @@ class AbAsmASTVisitor:
         for stmt in node.stmts:
             lin_stmts += stmt.visit(self, scope)
 
-        return AbAsmFunc(node.name, lin_args, lin_stmts)
+        return AsmFunc(node.name, lin_args, lin_stmts)
 
     def visit_decl_var(self, node):
         return node.name
@@ -41,9 +41,9 @@ class AbAsmASTVisitor:
         expr_ret, expr_stmts = node.expr.visit(self, scope)
         ret_var = scope.varmap.new_anonymous()
 
-        read_instr = AbAsmInstrLoad(VarConst(0), ret_var)
+        read_instr = AsmInstrLoad(VarConst(0), ret_var)
         return ret_var, expr_stmts + [
-            AbAsmInstrLoad(expr_ret, VarInstrRef(
+            AsmInstrLoad(expr_ret, VarInstrRef(
                 read_instr.get_ref(scope), 1)),
             read_instr,
         ]
@@ -55,15 +55,15 @@ class AbAsmASTVisitor:
         lhs_ret, lhs_stmts = node.lhs.visit(self, scope)
         rhs_ret, rhs_stmts = node.rhs.visit(self, scope)
         ret_var = scope.varmap.new_anonymous()
-        return ret_var, lhs_stmts + rhs_stmts + [AbAsmInstrAdd(lhs_ret, rhs_ret, ret_var)]
+        return ret_var, lhs_stmts + rhs_stmts + [AsmInstrAdd(lhs_ret, rhs_ret, ret_var)]
 
     def visit_expr_sub(self, node, scope):
         lhs_ret, lhs_stmts = node.lhs.visit(self, scope)
         rhs_ret, rhs_stmts = node.rhs.visit(self, scope)
         ret_var = scope.varmap.new_anonymous()
         return ret_var, lhs_stmts + rhs_stmts + [
-            AbAsmInstrMul(VarConst(-1), rhs_ret, rhs_ret),
-            AbAsmInstrAdd(lhs_ret, rhs_ret, ret_var)
+            AsmInstrMul(VarConst(-1), rhs_ret, rhs_ret),
+            AsmInstrAdd(lhs_ret, rhs_ret, ret_var)
         ]
 
     def visit_expr_mul(self, node, scope):
@@ -71,7 +71,7 @@ class AbAsmASTVisitor:
         rhs_ret, rhs_stmts = node.rhs.visit(self, scope)
         ret_var = scope.varmap.new_anonymous()
         return ret_var, lhs_stmts + rhs_stmts + [
-            AbAsmInstrMul(lhs_ret, rhs_ret, ret_var)
+            AsmInstrMul(lhs_ret, rhs_ret, ret_var)
         ]
 
     def visit_expr_lt(self, node, scope):
@@ -79,7 +79,7 @@ class AbAsmASTVisitor:
         rhs_ret, rhs_stmts = node.rhs.visit(self, scope)
         ret_var = scope.varmap.new_anonymous()
         return ret_var, lhs_stmts + rhs_stmts + [
-            AbAsmInstrLt(lhs_ret, rhs_ret, ret_var)
+            AsmInstrLt(lhs_ret, rhs_ret, ret_var)
         ]
 
     def visit_expr_eq(self, node, scope):
@@ -87,21 +87,21 @@ class AbAsmASTVisitor:
         rhs_ret, rhs_stmts = node.rhs.visit(self, scope)
         ret_var = scope.varmap.new_anonymous()
         return ret_var, lhs_stmts + rhs_stmts + [
-            AbAsmInstrEq(lhs_ret, rhs_ret, ret_var)
+            AsmInstrEq(lhs_ret, rhs_ret, ret_var)
         ]
 
     def visit_expr_not(self, node, scope):
         expr_ret, expr_stmts = node.expr.visit(self, scope)
         ret_var = scope.varmap.new_anonymous()
         return ret_var, expr_stmts + [
-            AbAsmInstrEq(VarConst(0), expr_ret, ret_var)
+            AsmInstrEq(VarConst(0), expr_ret, ret_var)
         ]
 
     def visit_expr_neg(self, node, scope):
         expr_ret, expr_stmts = node.expr.visit(self, scope)
         ret_var = scope.varmap.new_anonymous()
         return ret_var, expr_stmts + [
-            AbAsmInstrMul(VarConst(-1), expr_ret, ret_var)
+            AsmInstrMul(VarConst(-1), expr_ret, ret_var)
         ]
 
     def visit_expr_call(self, node, scope):
@@ -111,17 +111,17 @@ class AbAsmASTVisitor:
         for i, arg in enumerate(node.args):
             arg_var, arg_stmts = arg.visit(self, scope)
             stmts += arg_stmts
-            arg_load_stmts.append(AbAsmInstrLoad(
+            arg_load_stmts.append(AsmInstrLoad(
                 arg_var, VarNextStackRef(i+1)))
 
         ret_var = scope.varmap.new_anonymous()
 
-        load_instr = AbAsmInstrLoad(VarNextStackRef(0), ret_var)
+        load_instr = AsmInstrLoad(VarNextStackRef(0), ret_var)
 
         return ret_var, stmts + arg_load_stmts + [
-            AbAsmInstrLoad(VarInstrRef(
+            AsmInstrLoad(VarInstrRef(
                 load_instr.get_ref(scope), 0), VarNextStackRef(0)),
-            AbAsmInstrJump(VarSym(node.name, False)),
+            AsmInstrJump(VarSym(node.name, False)),
             load_instr
         ]
 
@@ -129,12 +129,12 @@ class AbAsmASTVisitor:
         expr_ret, expr_stmts = node.expr.visit(self, scope)
         dst_ret, dst_stmts = node.dst.visit(self, scope)
         return node.dst, expr_stmts + dst_stmts + [
-            AbAsmInstrLoad(expr_ret, dst_ret)
+            AsmInstrLoad(expr_ret, dst_ret)
         ]
 
     def visit_stmt_return(self, node, scope):
         ret_var, stmts = node.expr.visit(self, scope)
-        return stmts + [AbAsmInstrReturn(ret_var)]
+        return stmts + [AsmInstrReturn(ret_var)]
 
     def visit_stmt_expr(self, node, scope):
         # Don't care about result
@@ -155,4 +155,4 @@ class AbAsmASTVisitor:
 
 
 def compile_ast(ast):
-    return ast.visit(AbAsmASTVisitor())
+    return ast.visit(AsmASTVisitor())

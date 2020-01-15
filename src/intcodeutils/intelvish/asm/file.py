@@ -1,4 +1,4 @@
-class AbAsmFile:
+class AsmFile:
     def __init__(self):
         self.vars = {}
         self.funcs = {}
